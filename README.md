@@ -2,7 +2,7 @@
 
 An original interactive portfolio application for Gerardo Faustin Design. It is built in plain HTML, CSS, JavaScript, and Three.js, with no package manager or compilation step.
 
-The experience includes a live procedural Caribbean residence, six scroll-controlled camera positions, atmospheric particles, animated lighting, responsive motion, editorial chapter layouts, and original generated architectural project imagery. A lightweight Canvas scene remains available as a fallback if WebGL cannot load.
+The experience includes a live procedural Caribbean residence, six scroll-controlled camera positions, direct drag-to-orbit exploration with double-click reset, atmospheric particles, animated interior and path lighting, a reflecting pool, coastal landscaping, editorial chapter layouts, and original generated architectural project imagery. A lightweight Canvas scene remains available as a fallback if WebGL cannot load.
 
 ## Run locally
 
