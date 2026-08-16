@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Gerardo Faustin Design — architecture, engineering and interiors shaped for living." />
+    <title>Gerardo Faustin Design — Architecture & Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
+    <style>
+      :root { --ink:#111512; --moss:#26352d; --leaf:#92a78f; --sand:#e4dfd4; --paper:#f5f2eb; --line:rgba(228,223,212,.22); --mono:"DM Mono",monospace; --sans:"DM Sans",sans-serif; --serif:"Playfair Display",serif; }
+      * { box-sizing:border-box; } html { scroll-behavior:smooth; } body { margin:0; color:var(--paper); background:var(--ink); font-family:var(--sans); overflow-x:hidden; }
+      #architecture-scene,#webgl-scene { position:fixed; inset:0; z-index:0; width:100%; height:100%; pointer-events:none; background:#0b100d; }
+      #webgl-scene { z-index:.5; background:transparent; }
+      main,footer { position:relative; z-index:1; }
+      a { color:inherit; text-decoration:none; } button { font:inherit; } ::selection { background:var(--leaf); color:var(--ink); }
+      body.is-loading { overflow:hidden; }
+      .preloader { position:fixed; inset:0; z-index:100; display:grid; place-items:center; background:var(--ink); transition:opacity .8s ease,visibility .8s ease; }
+      .preloader.done { opacity:0; visibility:hidden; pointer-events:none; }
+      .preloader-inner { width:min(420px,74vw); text-align:center; }
+      .preloader-mark { margin-bottom:24px; font-family:var(--serif); font-size:clamp(2.6rem,7vw,5rem); font-style:italic; }
+      .preloader-track { height:1px; overflow:hidden; background:rgba(245,242,235,.15); }
+      .preloader-track i { display:block; width:0; height:100%; background:var(--leaf); transition:width .14s linear; }
+      .preloader-meta { display:flex; justify-content:space-between; margin-top:12px; color:#aeb8ae; font-family:var(--mono); font-size:9px; letter-spacing:.16em; text-transform:uppercase; }
+      .grain { position:fixed; inset:0; z-index:60; pointer-events:none; opacity:.035; mix-blend-mode:soft-light; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"); }
+      .cursor-dot,.cursor-ring { position:fixed; top:0; left:0; z-index:90; pointer-events:none; border-radius:50%; transform:translate(-50%,-50%); }
+      .cursor-dot { width:5px; height:5px; background:var(--paper); }
+      .cursor-ring { width:30px; height:30px; border:1px solid rgba(245,242,235,.55); transition:width .25s,height .25s,border-color .25s; }
+      .cursor-ring.over { width:48px; height:48px; border-color:var(--leaf); }
+      .chapter-rail { position:fixed; z-index:30; right:18px; top:50%; display:grid; gap:10px; transform:translateY(-50%); }
+      .chapter-rail a { display:block; width:18px; height:1px; background:rgba(245,242,235,.3); transition:width .35s,background .35s; transform-origin:right; }
+      .chapter-rail a.on { width:34px; background:var(--leaf); transform:translateX(-16px); }
+      .nav { position:fixed; inset:0 0 auto; z-index:20; height:76px; display:flex; align-items:center; justify-content:space-between; padding:0 clamp(20px,4vw,64px); border-bottom:1px solid transparent; transition:.35s ease; }
+      .nav.is-solid { background:rgba(17,21,18,.88); backdrop-filter:blur(14px); border-color:var(--line); }
+      .brand { display:flex; gap:12px; align-items:center; font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; }
+      .brand-mark { display:grid; place-items:center; width:32px; height:32px; border:1px solid var(--leaf); border-radius:50%; font-family:var(--serif); font-size:18px; letter-spacing:0; }
+      .nav-links { display:flex; gap:clamp(17px,2.8vw,42px); align-items:center; font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.12em; }
+      .nav-links a { opacity:.78; transition:opacity .2s; } .nav-links a:hover { opacity:1; }
+      .nav-cta { border:1px solid var(--leaf); padding:9px 12px; }
+      .hero { position:relative; min-height:100svh; display:flex; isolation:isolate; padding:132px clamp(20px,6vw,96px) 38px; }
+      .hero::before { content:""; position:absolute; z-index:-1; inset:0; background:linear-gradient(90deg,rgba(5,9,7,.9) 0%,rgba(5,9,7,.5) 42%,rgba(5,9,7,.06) 75%),linear-gradient(0deg,rgba(5,9,7,.78),transparent 48%); }
+      .hero::after { content:""; position:absolute; z-index:-1; inset:0; background:radial-gradient(circle at 73% 38%,rgba(190,143,76,.1),transparent 28%); pointer-events:none; }
+      .hero-copy { align-self:center; max-width:780px; } .eyebrow { display:flex; align-items:center; gap:10px; margin-bottom:28px; font-family:var(--mono); color:#c0cbbb; font-size:10px; text-transform:uppercase; letter-spacing:.18em; }
+      .eyebrow::before { content:""; width:34px; height:1px; background:var(--leaf); }
+      h1 { margin:0; font-family:var(--serif); max-width:780px; font-size:clamp(3.3rem,7.6vw,8rem); font-weight:500; line-height:.93; letter-spacing:-.045em; }
+      .title-line { display:block; overflow:hidden; padding-bottom:.06em; }
+      .title-line > span { display:block; transform:translateY(112%); transition:transform 1.15s cubic-bezier(.16,1,.3,1); }
+      body.ready .title-line > span { transform:none; } body.ready .title-line:nth-child(2)>span { transition-delay:.12s; }
+      .hero-copy>.eyebrow,.hero-copy>p,.hero-copy>.button { opacity:0; transform:translateY(16px); transition:opacity .8s ease,transform .8s ease; }
+      body.ready .hero-copy>.eyebrow,body.ready .hero-copy>p,body.ready .hero-copy>.button { opacity:1; transform:none; }
+      body.ready .hero-copy>.eyebrow { transition-delay:.15s; } body.ready .hero-copy>p { transition-delay:.42s; } body.ready .hero-copy>.button { transition-delay:.56s; }
+      h1 em { color:#c9d5c5; font-weight:500; } .hero p { width:min(430px,100%); margin:28px 0 34px; color:#e1e0d9; font-size:clamp(1rem,1.35vw,1.2rem); line-height:1.55; }
+      .button { display:inline-flex; gap:16px; align-items:center; padding:14px 17px; border:1px solid var(--paper); font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.12em; transition:all .25s; } .button:hover { background:var(--paper); color:var(--ink); } .button span { font-size:17px; line-height:10px; }
+      .hero-index { position:absolute; inset:auto clamp(20px,4vw,64px) 35px auto; display:grid; justify-items:end; gap:4px; font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:#d5dad1; text-transform:uppercase; } .hero-index b { font-size:30px; font-weight:400; letter-spacing:-.1em; }
+      .hero-chapters { position:absolute; left:clamp(20px,6vw,96px); right:clamp(20px,4vw,64px); bottom:32px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); border-top:1px solid var(--line); }
+      .hero-chapter { display:grid; grid-template-columns:auto 1fr; gap:14px; padding:15px 18px 0 0; color:#aeb8ae; font-family:var(--mono); font-size:8px; letter-spacing:.12em; text-transform:uppercase; }
+      .hero-chapter b { color:var(--paper); font-size:17px; font-weight:400; } .hero-chapter span { max-width:110px; }
+      .intro { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr); gap:clamp(38px,9vw,150px); min-height:100vh; align-items:center; padding:clamp(84px,13vw,180px) clamp(20px,10vw,160px); background:linear-gradient(90deg,rgba(7,12,9,.95),rgba(15,25,19,.62) 60%,rgba(7,12,9,.36)); color:var(--paper); border-block:1px solid var(--line); }
+      .intro h2,.section-title { margin:0; font-family:var(--serif); font-size:clamp(2.45rem,4.6vw,5.5rem); line-height:1.03; font-weight:500; letter-spacing:-.04em; } .intro .eyebrow { color:#b8c5b5; } .intro p { max-width:470px; color:#c9d2c7; font-size:clamp(1.08rem,1.5vw,1.45rem); line-height:1.55; }
+      .intro-stat { border-top:1px solid var(--line); padding-top:17px; margin-top:54px; display:flex; justify-content:space-between; font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.12em; } .intro-stat b { font-size:21px; font-weight:500; }
+      .work { position:relative; min-height:115vh; padding:clamp(92px,13vw,180px) clamp(20px,4vw,64px); background:linear-gradient(90deg,rgba(12,18,14,.94),rgba(19,31,24,.62) 52%,rgba(10,15,12,.45)); border-block:1px solid var(--line); } .work-head { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:48px; } .work-head p { margin:0; max-width:310px; color:#c8d1c5; line-height:1.5; }
+      .projects { display:grid; grid-template-columns:1.2fr .8fr .8fr; grid-auto-rows:260px; gap:12px; } .project { position:relative; overflow:hidden; display:flex; align-items:end; padding:22px; background:#667263; isolation:isolate; } .project::before { content:""; position:absolute; z-index:0; inset:0; background:linear-gradient(180deg,rgba(5,9,7,.05) 24%,rgba(5,9,7,.82)); transition:background .5s; } .project:hover::before { background:linear-gradient(180deg,rgba(5,9,7,.02) 10%,rgba(5,9,7,.7)); }
+      .project:nth-child(1) { grid-row:span 2; background:url('assets/hillside-house.jpg') center/cover; } .project:nth-child(2) { background:url('assets/courtyard.jpg') center/cover; } .project:nth-child(3) { background:url('assets/quiet-rooms.jpg') center/cover; } .project:nth-child(4) { grid-column:span 2; background:url('assets/gfd-hero.png') center 57%/cover; }
+      .project::after { content:""; position:absolute; z-index:1; inset:15px; border:1px solid rgba(245,242,235,.28); pointer-events:none; } .project-label { position:relative; z-index:2; display:flex; width:100%; justify-content:space-between; align-items:end; gap:10px; } .project h3 { margin:0; font-family:var(--serif); font-size:clamp(1.5rem,2.4vw,2.4rem); font-weight:500; } .project small { font-family:var(--mono); font-size:9px; letter-spacing:.13em; text-transform:uppercase; }
+      .services { min-height:100vh; padding:clamp(82px,12vw,170px) clamp(20px,10vw,160px); background:linear-gradient(90deg,rgba(8,13,10,.94),rgba(12,19,15,.7) 60%,rgba(8,13,10,.43)); color:var(--paper); border-block:1px solid var(--line); } .service-list { margin-top:56px; border-top:1px solid var(--line); } .service { display:grid; grid-template-columns:70px 1fr minmax(140px,.7fr); gap:25px; align-items:center; min-height:108px; border-bottom:1px solid var(--line); transition:background .35s,padding .35s; } .service:hover { padding-inline:16px; background:rgba(146,167,143,.08); } .service span { font-family:var(--mono); color:var(--leaf); font-size:10px; } .service h3 { margin:0; font-size:clamp(1.35rem,2.3vw,2.1rem); font-weight:500; letter-spacing:-.035em; } .service p { margin:0; color:#bbc6b9; font-size:.94rem; line-height:1.5; }
+      .approach { display:grid; grid-template-columns:.9fr 1.1fr; min-height:100vh; background:linear-gradient(90deg,rgba(9,14,11,.3),rgba(9,14,11,.96) 52%); border-block:1px solid var(--line); } .approach-art { position:relative; overflow:hidden; background:linear-gradient(140deg,rgba(153,166,141,.14),rgba(51,68,55,.08) 50%,rgba(22,32,24,.18)); } .approach-art::before,.approach-art::after { content:""; position:absolute; border:1px solid rgba(245,242,235,.4); border-radius:50%; } .approach-art::before { width:80%; aspect-ratio:1; top:11%; left:10%; } .approach-art::after { width:46%; aspect-ratio:1; bottom:8%; right:7%; background:rgba(229,223,212,.08); } .approach-art span { position:absolute; bottom:33px; left:35px; writing-mode:vertical-rl; font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; }
+      .approach-copy { padding:clamp(62px,10vw,145px) clamp(28px,8vw,120px); display:flex; flex-direction:column; justify-content:center; } .approach-copy p { max-width:460px; color:#c1c9bf; font-size:1.1rem; line-height:1.6; } .principles { display:grid; grid-template-columns:1fr 1fr; gap:0; margin-top:34px; border-top:1px solid var(--line); } .principle { padding:20px 10px 20px 0; border-bottom:1px solid var(--line); } .principle:nth-child(even) { padding-left:16px; border-left:1px solid var(--line); } .principle b { display:block; margin-bottom:8px; font-family:var(--mono); color:var(--leaf); font-size:10px; letter-spacing:.13em; } .principle span { color:#d7ddd4; font-size:.92rem; }
+      .contact { position:relative; padding:clamp(86px,14vw,190px) clamp(20px,10vw,160px); overflow:hidden; background:var(--paper); color:var(--ink); } .contact::after { content:"GFD"; position:absolute; right:-.04em; bottom:-.22em; color:#d9ded4; font-family:var(--serif); font-size:min(43vw,540px); line-height:.8; letter-spacing:-.1em; pointer-events:none; } .contact > * { position:relative; z-index:1; } .contact h2 { max-width:900px; margin:0 0 38px; font-family:var(--serif); font-size:clamp(3rem,7.2vw,8rem); line-height:.9; letter-spacing:-.06em; font-weight:500; } .contact .button { border-color:var(--ink); } .contact .button:hover { background:var(--ink); color:var(--paper); }
+      footer { display:flex; justify-content:space-between; gap:25px; padding:22px clamp(20px,4vw,64px); background:var(--ink); color:#bdc6b9; font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase; } footer a { color:var(--paper); }
+      .reveal { opacity:0; filter:blur(5px); transform:translateY(34px); transition:opacity .9s ease,filter .9s ease,transform 1s cubic-bezier(.16,1,.3,1); } .reveal.in { opacity:1; filter:none; transform:none; }
+      @media (max-width:720px) { .nav { height:62px; } .nav-links a:not(.nav-cta) { display:none; } .hero { padding-top:100px; padding-bottom:110px; } .hero-index,.chapter-rail { display:none; } .hero-chapters { grid-template-columns:1fr 1fr; gap:12px; bottom:20px; } .hero-chapter { padding-top:10px; } .hero-chapter:nth-child(n+3) { display:none; } .intro,.approach { grid-template-columns:1fr; } .projects { grid-template-columns:1fr; grid-auto-rows:230px; } .project:nth-child(n) { grid-row:auto; grid-column:auto; } .service { grid-template-columns:42px 1fr; padding:18px 0; } .service p { grid-column:2; } .approach { min-height:0; } .approach-art { min-height:330px; } .work-head { display:block; } .work-head p { margin-top:20px; } footer { display:grid; justify-content:start; line-height:1.7; } footer>* { display:block; } }
+      @media (pointer:coarse) { .cursor-dot,.cursor-ring { display:none; } }
+      @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition-duration:.01ms!important; animation-duration:.01ms!important; } .preloader { display:none; } .title-line>span,.hero-copy>* { opacity:1!important; transform:none!important; } }
+    </style>
+  </head>
+  <body class="is-loading">
+    <div class="preloader" aria-hidden="true"><div class="preloader-inner"><div class="preloader-mark">GFD</div><div class="preloader-track"><i></i></div><div class="preloader-meta"><span>Raising the design studio</span><b>0%</b></div></div></div>
+    <canvas id="architecture-scene" aria-hidden="true"></canvas><canvas id="webgl-scene" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div><div class="cursor-dot" aria-hidden="true"></div><div class="cursor-ring" aria-hidden="true"></div>
+    <nav class="chapter-rail" aria-label="Page sections"><a href="#top" class="on" aria-label="Introduction"></a><a href="#work" aria-label="Selected work"></a><a href="#services" aria-label="Services"></a><a href="#approach" aria-label="Approach"></a><a href="#contact" aria-label="Contact"></a></nav>
+    <header class="nav" id="nav">
+      <a class="brand" href="#top" aria-label="Gerardo Faustin Design home"><span class="brand-mark">G</span><span>Gerardo Faustin<br>Design Studio</span></a>
+      <nav class="nav-links" aria-label="Main navigation"><a href="#work">Selected work</a><a href="#services">Services</a><a href="#approach">Approach</a><a class="nav-cta" href="#contact">Start a project</a></nav>
+    </header>
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title"><div class="hero-copy"><div class="eyebrow">Chapter 00 · Architecture · Engineering · Interiors</div><h1 id="hero-title"><span class="title-line"><span>Space with a</span></span><span class="title-line"><span><em>point of view.</em></span></span></h1><p>Gerardo Faustin Design creates considered environments where architecture, engineering, and everyday life move as one.</p><a class="button" href="#work">Scroll to enter <span>↓</span></a></div><div class="hero-index"><b>01</b><span>Kingston · Jamaica</span></div><div class="hero-chapters" aria-label="Journey overview"><div class="hero-chapter"><b>01</b><span>The studio<br>Purpose & place</span></div><div class="hero-chapter"><b>02</b><span>Selected work<br>Built around life</span></div><div class="hero-chapter"><b>03</b><span>Our practice<br>Design to delivery</span></div><div class="hero-chapter"><b>04</b><span>New commissions<br>Begin a project</span></div></div></section>
+      <section class="intro"><div class="reveal"><div class="eyebrow">The studio</div><h2>Minimal design. Maximum meaning.</h2></div><div class="reveal"><p>We believe the strongest spaces feel inevitable: every line has a purpose, every material carries a feeling, and every detail earns its place.</p><div class="intro-stat"><span>Established</span><b>2016</b><span>Caribbean-based</span></div></div></section>
+      <section class="work" id="work"><div class="work-head reveal"><div><div class="eyebrow">Selected work</div><h2 class="section-title">Built around life.</h2></div><p>Places for gathering, working, restoring, and imagining what comes next.</p></div><div class="projects"><article class="project reveal"><div class="project-label"><div><small>Residential · 01</small><h3>Hillside House</h3></div><small>View project ↗</small></div></article><article class="project reveal"><div class="project-label"><div><small>Hospitality · 02</small><h3>Courtyard</h3></div><small>View project ↗</small></div></article><article class="project reveal"><div class="project-label"><div><small>Interiors · 03</small><h3>Quiet Rooms</h3></div><small>View project ↗</small></div></article><article class="project reveal"><div class="project-label"><div><small>Planning · 04</small><h3>Coastal Edge</h3></div><small>View project ↗</small></div></article></div></section>
+      <section class="services" id="services"><div class="reveal"><div class="eyebrow">What we do</div><h2 class="section-title">From first line<br>to final light.</h2></div><div class="service-list"><div class="service reveal"><span>01</span><h3>Architecture</h3><p>Concept, feasibility, planning, and detailed design for places with a lasting presence.</p></div><div class="service reveal"><span>02</span><h3>Engineering</h3><p>Technical coordination that protects the clarity of the original idea.</p></div><div class="service reveal"><span>03</span><h3>Interior Design</h3><p>Material-led interiors that bring warmth, restraint, and identity to daily life.</p></div><div class="service reveal"><span>04</span><h3>Project Delivery</h3><p>Clear guidance from design development through construction and completion.</p></div></div></section>
+      <section class="approach" id="approach"><div class="approach-art" aria-hidden="true"><span>Light · material · proportion</span></div><div class="approach-copy reveal"><div class="eyebrow">How we work</div><h2 class="section-title">A practice of attention.</h2><p>Our process is intentionally close: we listen carefully, test rigorously, and keep the human experience at the center of every decision.</p><div class="principles"><div class="principle"><b>01 / Listen</b><span>Start with the life a place will hold.</span></div><div class="principle"><b>02 / Refine</b><span>Edit until the essential remains.</span></div><div class="principle"><b>03 / Align</b><span>Bring creative and technical thinking together.</span></div><div class="principle"><b>04 / Deliver</b><span>Protect the idea all the way through.</span></div></div></div></section>
+      <section class="contact" id="contact"><div class="eyebrow">New commissions</div><h2>Let’s make<br>room for what’s next.</h2><a class="button" href="mailto:gerardofaustindesigns@gmail.com">gerardofaustindesigns@gmail.com <span>↗</span></a> <a class="button" href="https://wa.me/18768056385" target="_blank" rel="noopener">WhatsApp +1 876 805 6385 <span>↗</span></a></section>
+    </main>
+    <footer><span>© 2026 Gerardo Faustin Design</span><span>Architecture · Engineering · Interiors</span><a href="https://wa.me/18768056385" target="_blank" rel="noopener">WhatsApp +1 876 805 6385</a></footer>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+    <script>
+      const useWebgl=Boolean(window.THREE);
+      if(useWebgl){
+        const webCanvas=document.querySelector('#webgl-scene');
+        const renderer3D=new THREE.WebGLRenderer({canvas:webCanvas,antialias:innerWidth>720,alpha:false,powerPreference:'high-performance'});
+        renderer3D.setPixelRatio(Math.min(devicePixelRatio||1,innerWidth<720?1.25:1.75));
+        renderer3D.setSize(innerWidth,innerHeight,false);renderer3D.outputEncoding=THREE.sRGBEncoding;renderer3D.toneMapping=THREE.ACESFilmicToneMapping;renderer3D.toneMappingExposure=1.06;
+        renderer3D.shadowMap.enabled=innerWidth>720;renderer3D.shadowMap.type=THREE.PCFSoftShadowMap;
+        const world3D=new THREE.Scene();world3D.background=new THREE.Color(0x07100d);world3D.fog=new THREE.FogExp2(0x07100d,.018);
+        const camera3D=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,180),villa3D=new THREE.Group();world3D.add(villa3D);
+        const texCanvas=(base,grain)=>{const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');x.fillStyle=base;x.fillRect(0,0,128,128);for(let i=0;i<900;i++){const v=80+Math.random()*100;x.fillStyle=`rgba(${v},${v},${v},${Math.random()*grain})`;x.fillRect(Math.random()*128,Math.random()*128,Math.random()*2+.3,Math.random()*2+.3)}const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,3);t.encoding=THREE.sRGBEncoding;return t};
+        const stoneTex=texCanvas('#85877e',.12),darkTex=texCanvas('#242d27',.1),woodTex=texCanvas('#4b3528',.11);
+        const mats={stone:new THREE.MeshStandardMaterial({map:stoneTex,color:0xa0a398,roughness:.94}),dark:new THREE.MeshStandardMaterial({map:darkTex,color:0x27332b,roughness:.87}),wood:new THREE.MeshStandardMaterial({map:woodTex,color:0x644736,roughness:.72}),metal:new THREE.MeshStandardMaterial({color:0x1a201c,roughness:.3,metalness:.72}),glass:new THREE.MeshPhysicalMaterial({color:0x839d94,roughness:.08,metalness:.05,transmission:.3,transparent:true,opacity:.35}),warm:new THREE.MeshStandardMaterial({color:0x3d2619,emissive:0xd5843f,emissiveIntensity:1.3,roughness:.8}),water:new THREE.MeshPhysicalMaterial({color:0x244c4c,roughness:.12,metalness:.05,transparent:true,opacity:.78,clearcoat:1}),leaf:new THREE.MeshStandardMaterial({color:0x294c35,roughness:.83,side:THREE.DoubleSide})};
+        const box3D=(w,h,d,x,y,z,mat=mats.stone,parent=villa3D)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;parent.add(m);return m};
+        // Site, reflecting pool and approach.
+        box3D(46,.8,38,0,-.45,0,mats.dark);box3D(28,.42,20,0,.02,-1,mats.stone);box3D(13,.32,8,-18,.08,5,mats.dark);
+        const pool3D=new THREE.Mesh(new THREE.PlaneGeometry(12.4,7.4),mats.water);pool3D.rotation.x=-Math.PI/2;pool3D.position.set(-17.7,.29,5);villa3D.add(pool3D);
+        for(let i=0;i<7;i++)box3D(2.6,.22,1.1,-12+i*2.8,.1,13,mats.stone);
+        // A Caribbean modern residence: platform, enclosure and deep roof.
+        box3D(24,.65,17,0,.48,-1,mats.stone);box3D(25,.7,18,0,7.35,-1,mats.dark);box3D(23,6,.5,0,3.75,-9.2,mats.stone);box3D(.55,6,15,-11.2,3.75,-1,mats.stone);
+        [-10.4,-3.5,3.5,10.4].forEach(x=>[-8,6].forEach(z=>box3D(.48,6.5,.48,x,3.75,z,mats.dark)));
+        const glowWall=box3D(18,4.8,.16,1,3.5,-8.82,mats.warm);glowWall.castShadow=false;
+        for(let i=-4;i<=4;i++)box3D(.13,5.3,.22,i*2.05,3.55,-8.55,mats.metal);
+        const glassWall=box3D(19,5.35,.12,0,3.6,-6.8,mats.glass);glassWall.castShadow=false;
+        for(let i=0;i<15;i++)box3D(.18,5.8,.72,10.3,3.65,-7.5+i*.95,mats.wood);
+        // Furniture and interior objects.
+        const sofa3D=new THREE.Group();villa3D.add(sofa3D);box3D(6,.65,2.25,1,1.18,-4.4,mats.dark,sofa3D);box3D(6,.85,.55,1,1.9,-5.25,mats.dark,sofa3D);box3D(.55,1.2,2.1,-1.75,1.55,-4.4,mats.dark,sofa3D);box3D(.55,1.2,2.1,3.75,1.55,-4.4,mats.dark,sofa3D);
+        box3D(3.2,.3,1.5,1,1,-1.5,mats.wood);box3D(.22,.8,.22,.1,.55,-1.5,mats.metal);box3D(.22,.8,.22,1.9,.55,-1.5,mats.metal);
+        // Sculptural stair and entry portal.
+        for(let i=0;i<7;i++)box3D(5-i*.22,.26,1.1,12.6,.15+i*.24,8.4-i*.72,mats.stone);
+        box3D(.65,6,.65,14,3.2,6,mats.dark);box3D(.65,6,.65,19,3.2,6,mats.dark);box3D(5.65,.65,.65,16.5,6.18,6,mats.dark);
+        // Palm and low tropical landscaping.
+        const palm3D=new THREE.Group();palm3D.position.set(-12,0,-2);villa3D.add(palm3D);const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.32,.58,7,10),new THREE.MeshStandardMaterial({color:0x46372a,roughness:1}));trunk.position.y=3.5;trunk.rotation.z=-.08;trunk.castShadow=true;palm3D.add(trunk);
+        for(let i=0;i<13;i++){const leaf=new THREE.Mesh(new THREE.PlaneGeometry(6,.85,8,1),mats.leaf);const pos=leaf.geometry.attributes.position;for(let p=0;p<pos.count;p++){const xx=pos.getX(p);pos.setZ(p,Math.sin((xx/6+.5)*Math.PI)*.75)}pos.needsUpdate=true;leaf.position.set(0,7.05,0);leaf.rotation.set(-.5+Math.sin(i*1.7)*.25,i/13*Math.PI*2,.1);leaf.translateX(2.2);leaf.castShadow=true;palm3D.add(leaf)}
+        for(let i=0;i<28;i++){const rock=new THREE.Mesh(new THREE.IcosahedronGeometry(.35+(i%5)*.1,1),mats.dark);const a=i*.93,r=14+(i%6)*1.7;rock.position.set(Math.cos(a)*r,-.02,Math.sin(a)*r);rock.scale.y=.55;rock.rotation.set(i*.2,i*.7,0);villa3D.add(rock)}
+        // Atmospheric light and particles.
+        world3D.add(new THREE.HemisphereLight(0xb7c8c0,0x07100d,.95));const moonLight=new THREE.DirectionalLight(0xc9d7d0,1.8);moonLight.position.set(-14,22,18);moonLight.castShadow=innerWidth>720;moonLight.shadow.mapSize.set(1024,1024);world3D.add(moonLight);const fillLight=new THREE.DirectionalLight(0xe2d4bc,.72);fillLight.position.set(20,10,25);world3D.add(fillLight);
+        const interiorLight=new THREE.PointLight(0xffa45d,3.2,30,2);interiorLight.position.set(0,4,-5.7);world3D.add(interiorLight);const poolLight=new THREE.PointLight(0x5fbbb3,.85,18,2);poolLight.position.set(-17,1,5);world3D.add(poolLight);
+        const moon3D=new THREE.Mesh(new THREE.SphereGeometry(2.4,32,24),new THREE.MeshBasicMaterial({color:0xd9b596}));moon3D.position.set(-28,19,-42);world3D.add(moon3D);
+        const particlePos=new Float32Array(360*3);for(let i=0;i<360;i++){particlePos[i*3]=(Math.random()-.5)*70;particlePos[i*3+1]=Math.random()*22;particlePos[i*3+2]=(Math.random()-.5)*70}const particleGeo=new THREE.BufferGeometry();particleGeo.setAttribute('position',new THREE.BufferAttribute(particlePos,3));const particles3D=new THREE.Points(particleGeo,new THREE.PointsMaterial({color:0xd9e2d5,size:.055,transparent:true,opacity:.42,depthWrite:false}));world3D.add(particles3D);
+        const cameraFrames=[{p:[29,12,29],l:[0,3,-1]},{p:[5,6,28],l:[0,3,-3]},{p:[-23,6,16],l:[-3,2,-1]},{p:[15,5,13],l:[1,2,-4]},{p:[-6,13,8],l:[4,1,0]},{p:[23,5,-16],l:[0,3,-4]}];
+        const currentLook=new THREE.Vector3(0,3,-1),desiredPos=new THREE.Vector3(),desiredLook=new THREE.Vector3();let webMouseX=0,webMouseY=0,webClock=0;
+        const webResize=()=>{camera3D.aspect=innerWidth/innerHeight;camera3D.updateProjectionMatrix();renderer3D.setPixelRatio(Math.min(devicePixelRatio||1,innerWidth<720?1.25:1.75));renderer3D.setSize(innerWidth,innerHeight,false)};addEventListener('resize',webResize,{passive:true});
+        addEventListener('pointermove',e=>{webMouseX=e.clientX/innerWidth-.5;webMouseY=e.clientY/innerHeight-.5},{passive:true});
+        const webAnimate=()=>{webClock+=.008;const maxScroll=Math.max(1,document.documentElement.scrollHeight-innerHeight),journey=Math.min(cameraFrames.length-1,scrollY/maxScroll*(cameraFrames.length-1)),index=Math.min(cameraFrames.length-2,Math.floor(journey)),mix=journey-index,ease=mix*mix*(3-2*mix),a=cameraFrames[index],b=cameraFrames[index+1];desiredPos.set(a.p[0]+(b.p[0]-a.p[0])*ease+webMouseX*1.3,a.p[1]+(b.p[1]-a.p[1])*ease-webMouseY*.65,a.p[2]+(b.p[2]-a.p[2])*ease);desiredLook.set(a.l[0]+(b.l[0]-a.l[0])*ease,a.l[1]+(b.l[1]-a.l[1])*ease,a.l[2]+(b.l[2]-a.l[2])*ease);camera3D.position.lerp(desiredPos,.055);currentLook.lerp(desiredLook,.055);camera3D.lookAt(currentLook);particles3D.rotation.y=webClock*.035;const pp=particleGeo.attributes.position;for(let i=0;i<360;i++){let y=pp.getY(i)-.006*(1+i%4);if(y<0)y=22;pp.setY(i,y)}pp.needsUpdate=true;pool3D.material.color.offsetHSL(Math.sin(webClock)*.00008,0,0);interiorLight.intensity=3.05+Math.sin(webClock*2.2)*.18;renderer3D.render(world3D,camera3D);requestAnimationFrame(webAnimate)};camera3D.position.set(...cameraFrames[0].p);camera3D.lookAt(...cameraFrames[0].l);webAnimate();
+      }
+      /* Original scroll-driven architectural atmosphere. The scene is drawn
+         procedurally and uses no code or artwork from the reference project. */
+      const sceneCanvas=document.querySelector('#architecture-scene'),sceneCtx=sceneCanvas.getContext('2d');
+      let sceneW=innerWidth,sceneH=innerHeight,sceneDpr=1,sceneScroll=0,sceneScrollTarget=0,sceneMouseX=0,sceneMouseY=0,sceneTime=0;
+      const sceneDust=Array.from({length:72},(_,i)=>({x:(i*73%997)/997,y:(i*137%991)/991,s:.3+(i%7)*.11,p:(i%13)*.48}));
+      const resizeScene=()=>{sceneW=innerWidth;sceneH=innerHeight;sceneDpr=Math.min(devicePixelRatio||1,1.75);sceneCanvas.width=Math.round(sceneW*sceneDpr);sceneCanvas.height=Math.round(sceneH*sceneDpr);sceneCtx.setTransform(sceneDpr,0,0,sceneDpr,0,0)};
+      const sceneLine=(x1,y1,x2,y2,alpha=.2,width=1)=>{sceneCtx.beginPath();sceneCtx.moveTo(x1,y1);sceneCtx.lineTo(x2,y2);sceneCtx.strokeStyle=`rgba(205,220,207,${alpha})`;sceneCtx.lineWidth=width;sceneCtx.stroke()};
+      const drawArchitecture=()=>{
+        if(useWebgl)return;
+        sceneTime+=.008;sceneScroll+=(sceneScrollTarget-sceneScroll)*.055;
+        const chapter=Math.min(1,Math.max(0,sceneScroll));
+        const horizon=sceneH*(.37+.08*Math.sin(chapter*Math.PI*2));
+        const vanishX=sceneW*(.52+sceneMouseX*.035+Math.sin(chapter*5.4)*.05);
+        const sky=sceneCtx.createLinearGradient(0,0,0,sceneH);sky.addColorStop(0,`rgb(${9+chapter*5},${15+chapter*7},${12+chapter*5})`);sky.addColorStop(.55,'#15231b');sky.addColorStop(1,'#070a08');sceneCtx.fillStyle=sky;sceneCtx.fillRect(0,0,sceneW,sceneH);
+        const glow=sceneCtx.createRadialGradient(vanishX,horizon,0,vanishX,horizon,sceneW*.48);glow.addColorStop(0,`rgba(176,145,92,${.14+.05*Math.sin(sceneTime)})`);glow.addColorStop(1,'rgba(8,12,9,0)');sceneCtx.fillStyle=glow;sceneCtx.fillRect(0,0,sceneW,sceneH);
+        sceneCtx.save();sceneCtx.globalCompositeOperation='screen';sceneDust.forEach(d=>{const yy=((d.y+sceneTime*.012*(1+d.s))%1)*sceneH;const xx=d.x*sceneW+Math.sin(sceneTime*2+d.p)*18;sceneCtx.fillStyle=`rgba(210,221,204,${.07+d.s*.08})`;sceneCtx.fillRect(xx,yy,d.s*1.8,d.s*1.8)});sceneCtx.restore();
+        // Distant stepped skyline.
+        const baseY=horizon+sceneH*.14;for(let i=-2;i<10;i++){const bw=sceneW*.12+(i%3)*22;const bx=i*sceneW*.115-(chapter*sceneW*.16)%sceneW*.115;const bh=sceneH*(.09+((i*47)%5)*.028);sceneCtx.fillStyle=`rgba(6,10,8,${.68+(i%2)*.08})`;sceneCtx.fillRect(bx,baseY-bh,bw,bh);sceneCtx.fillStyle='rgba(207,155,79,.16)';for(let wx=bx+15;wx<bx+bw-8;wx+=23){for(let wy=baseY-bh+16;wy<baseY-10;wy+=22){if((Math.floor(wx+wy+i)%5)===0)sceneCtx.fillRect(wx,wy,4,7)}}}
+        // Perspective floor and measured construction grid.
+        sceneCtx.fillStyle='rgba(8,12,9,.82)';sceneCtx.fillRect(0,horizon,sceneW,sceneH-horizon);
+        for(let i=-9;i<=9;i++){const edgeX=sceneW*.5+i*sceneW*.1+sceneMouseX*22;sceneLine(vanishX,horizon,edgeX,sceneH,.13,1)}
+        for(let i=0;i<19;i++){const t=i/18;const eased=t*t;const y=horizon+eased*(sceneH-horizon);sceneLine(0,y,sceneW,y,.08+eased*.13,1)}
+        // Monumental frame gliding like a camera move through a structure.
+        const frameShift=((chapter*2.35)%1)*sceneW*.48;const frameX=sceneW*.12-frameShift+sceneMouseX*14;const columnW=Math.max(34,sceneW*.055);sceneCtx.fillStyle='rgba(16,24,19,.96)';sceneCtx.fillRect(frameX,0,columnW,sceneH);sceneCtx.fillRect(frameX+sceneW*.62,0,columnW,sceneH);sceneCtx.fillRect(frameX,sceneH*.13,sceneW*.62+columnW,Math.max(30,sceneH*.065));sceneCtx.strokeStyle='rgba(167,184,163,.22)';sceneCtx.lineWidth=1;sceneCtx.strokeRect(frameX+columnW,sceneH*.13+sceneH*.065,sceneW*.62-columnW,sceneH*.55);
+        const windowGlow=sceneCtx.createLinearGradient(frameX,0,frameX+sceneW*.62,0);windowGlow.addColorStop(0,'rgba(191,154,93,.02)');windowGlow.addColorStop(.65,'rgba(191,154,93,.16)');windowGlow.addColorStop(1,'rgba(191,154,93,.03)');sceneCtx.fillStyle=windowGlow;sceneCtx.fillRect(frameX+columnW,sceneH*.2,sceneW*.62-columnW,sceneH*.48);
+        // Drafting datum and camera reticle.
+        sceneLine(sceneW-128,sceneH*.23,sceneW-36,sceneH*.23,.35);sceneLine(sceneW-82,sceneH*.23-46,sceneW-82,sceneH*.23+46,.2);sceneCtx.fillStyle='rgba(210,221,207,.52)';sceneCtx.font='9px DM Mono';sceneCtx.letterSpacing='2px';sceneCtx.fillText(`${String(Math.floor(chapter*100)).padStart(2,'0')} / 100`,sceneW-126,sceneH*.23-10);
+        const vignette=sceneCtx.createRadialGradient(sceneW/2,sceneH/2,sceneW*.1,sceneW/2,sceneH/2,sceneW*.72);vignette.addColorStop(0,'rgba(0,0,0,0)');vignette.addColorStop(1,'rgba(0,0,0,.68)');sceneCtx.fillStyle=vignette;sceneCtx.fillRect(0,0,sceneW,sceneH);
+        requestAnimationFrame(drawArchitecture)
+      };
+      resizeScene();addEventListener('resize',resizeScene,{passive:true});addEventListener('pointermove',event=>{sceneMouseX=event.clientX/innerWidth-.5;sceneMouseY=event.clientY/innerHeight-.5},{passive:true});requestAnimationFrame(drawArchitecture);
+      const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const preloader=document.querySelector('.preloader'),progress=document.querySelector('.preloader-track i'),counter=document.querySelector('.preloader-meta b');
+      const finishLoad=()=>{progress.style.width='100%';counter.textContent='100%';setTimeout(()=>{preloader.classList.add('done');document.body.classList.remove('is-loading');document.body.classList.add('ready')},reduced?0:360)};
+      if(reduced){finishLoad()}else{let value=0;const timer=setInterval(()=>{value=Math.min(value+Math.ceil(Math.random()*12),92);progress.style.width=value+'%';counter.textContent=value+'%';if(value>=92)clearInterval(timer)},80);const complete=()=>setTimeout(finishLoad,480);if(document.readyState==='complete')complete();else addEventListener('load',complete,{once:true})}
+      const nav=document.querySelector('#nav'),hero=document.querySelector('.hero'); let ticking=false;
+      const updateScroll=()=>{nav.classList.toggle('is-solid',scrollY>28);hero.style.setProperty('--hero-y',Math.min(scrollY*.12,90)+'px');sceneScrollTarget=scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight);ticking=false};
+      addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(updateScroll);ticking=true}},{passive:true});
+      const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in');observer.unobserve(entry.target)}}),{threshold:.12});
+      document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+      const sections=[...document.querySelectorAll('.hero,#work,#services,#approach,#contact')],rail=[...document.querySelectorAll('.chapter-rail a')];
+      const chapterObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){const index=sections.indexOf(entry.target);rail.forEach((dot,i)=>dot.classList.toggle('on',i===index))}}),{rootMargin:'-42% 0px -48% 0px'});sections.forEach(section=>chapterObserver.observe(section));
+      const dot=document.querySelector('.cursor-dot'),ring=document.querySelector('.cursor-ring');let mouseX=-40,mouseY=-40,ringX=-40,ringY=-40;
+      addEventListener('pointermove',event=>{mouseX=event.clientX;mouseY=event.clientY;dot.style.transform=`translate(${mouseX}px,${mouseY}px) translate(-50%,-50%)`});
+      const follow=()=>{ringX+=(mouseX-ringX)*.15;ringY+=(mouseY-ringY)*.15;ring.style.transform=`translate(${ringX}px,${ringY}px) translate(-50%,-50%)`;requestAnimationFrame(follow)};follow();
+      document.querySelectorAll('a,button,.project').forEach(el=>{el.addEventListener('pointerenter',()=>ring.classList.add('over'));el.addEventListener('pointerleave',()=>ring.classList.remove('over'))});
+    </script>
+  </body>
+</html>
