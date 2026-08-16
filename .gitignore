@@ -3,3 +3,11 @@ Icon?
 assets/hillside-house.png
 assets/courtyard.png
 assets/quiet-rooms.png
+/node_modules
+/.next/
+/.vinext/
+/dist/
+/.wrangler/
+/outputs/
+/work/
+.env*

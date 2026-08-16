@@ -1,0 +1,20 @@
+* { box-sizing: border-box; }
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #07100b;
+}
+
+.site-shell,
+.site-frame {
+  width: 100vw;
+  height: 100dvh;
+  margin: 0;
+  border: 0;
+}
+
+.site-frame { display: block; background: #07100b; }
