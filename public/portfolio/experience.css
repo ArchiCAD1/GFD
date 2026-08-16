@@ -58,13 +58,7 @@
 }
 
 .atmosphere-depth {
-  inset: -8%;
-  opacity: 0.46;
-  background: url("assets/gfd-hero.png") center 66% / cover;
-  clip-path: polygon(0 64%, 34% 48%, 64% 58%, 100% 42%, 100% 100%, 0 100%);
-  filter: brightness(0.58) saturate(1.15) blur(0.4px);
-  transform: translate3d(calc(var(--scene-x, 0) * -1.8), calc(var(--scene-y, 0) * -1.4), 70px) scale(1.14);
-  will-change: transform;
+  display: none;
 }
 
 .atmosphere-light {
@@ -178,8 +172,21 @@
 .work,
 .services,
 .approach {
-  background: linear-gradient(120deg, rgba(5, 13, 8, 0.70), rgba(8, 18, 12, 0.38)) !important;
+  background: linear-gradient(120deg, rgba(5, 13, 8, 0.58), rgba(8, 18, 12, 0.30)) !important;
 }
+
+.intro > div,
+.work-head {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, rgba(17, 31, 22, 0.38), rgba(7, 18, 11, 0.18));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.16), var(--glass-shadow);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+}
+
+.intro > div { padding: clamp(26px, 4vw, 48px); }
+.work-head { padding: clamp(22px, 3vw, 36px); }
 
 .project {
   border-radius: var(--radius-md) !important;
@@ -193,10 +200,12 @@
 .service {
   margin-top: 10px;
   padding-inline: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.045);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-md) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.035));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12), 0 18px 44px rgba(0, 0, 0, 0.14);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  backdrop-filter: blur(18px) saturate(1.3);
 }
 
 .approach {
@@ -218,9 +227,7 @@
 
 .approach-art::before,
 .approach-art::after {
-  border-radius: 50% !important;
-  border-color: rgba(255, 255, 255, 0.34) !important;
-  box-shadow: inset 0 0 28px rgba(255, 255, 255, 0.07), 0 0 36px rgba(255, 255, 255, 0.06);
+  display: none !important;
 }
 
 .approach-art span {
@@ -252,8 +259,12 @@
 .principle,
 .principle:nth-child(even) {
   padding: 18px !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 20px !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.035));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  backdrop-filter: blur(14px) saturate(1.25);
 }
 
 .contact {
