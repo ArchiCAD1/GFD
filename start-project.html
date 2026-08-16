@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Apply to start an architecture, engineering, or interiors project with Gerardo Faustin Designs." />
+    <title>Start a Project — Gerardo Faustin Designs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="application.css" />
+  </head>
+  <body>
+    <div class="application-atmosphere" aria-hidden="true"></div>
+    <main class="application-shell">
+      <header class="application-nav">
+        <a class="application-brand" href="index.html"><img src="assets/gerardo-faustin-designs-logo.jpg" alt="" /><span>Gerardo Faustin<br />Design Studio</span></a>
+        <a class="back-link" href="index.html">← Back to portfolio</a>
+      </header>
+
+      <section class="application-intro">
+        <div><div class="kicker">Project application · Private and review-led</div><h1>Tell us what you want to build.</h1></div>
+        <p>Share the site, spaces, timing, and documents behind your project. You will see a preliminary planning estimate before submitting; every formal quotation is personally reviewed.</p>
+      </section>
+
+      <div class="wizard-layout">
+        <form class="wizard-card" id="project-application" novalidate>
+          <div id="wizard-content">
+            <div class="progress-meta"><span id="progress-name">Your details</span><span id="progress-count">01 / 06</span></div>
+            <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+
+            <section class="wizard-step is-active" data-step="0" data-title="Your details">
+              <div class="step-number">Step 01 · Contact</div><h2>First, who are we designing for?</h2><p class="step-intro">Your email is verified before documents can be uploaded or an application submitted.</p>
+              <div class="field-grid">
+                <div class="field"><label for="full-name">Full name *</label><input id="full-name" name="fullName" autocomplete="name" required /></div>
+                <div class="field"><label for="company">Company or organization</label><input id="company" name="company" autocomplete="organization" /></div>
+                <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+                <div class="field"><label for="phone">Phone / WhatsApp *</label><input id="phone" name="phone" type="tel" autocomplete="tel" required /></div>
+                <div class="field full"><label for="contact-method">Preferred contact method</label><select id="contact-method" name="preferredContact"><option>Email</option><option>WhatsApp</option><option>Phone call</option></select></div>
+              </div>
+              <div class="verification-box"><div><strong>Email verification</strong><div class="verification-status" id="verification-status">Verification is required before submission.</div></div><button class="pill-button" id="verify-email" type="button">Verify email</button></div>
+            </section>
+
+            <section class="wizard-step" data-step="1" data-title="Project type">
+              <div class="step-number">Step 02 · Project</div><h2>What kind of place is this?</h2><p class="step-intro">The project classification selects the correct square-foot rate and the room schedule we ask you to complete.</p>
+              <div class="group-label">Project classification *</div>
+              <div class="choice-grid">
+                <label class="choice"><input type="radio" name="classification" value="residential" required checked /><span><strong>Residential</strong><small>Homes, villas, apartments, additions, and residential interiors.</small></span></label>
+                <label class="choice"><input type="radio" name="classification" value="commercial" required /><span><strong>Commercial</strong><small>Offices, retail, hospitality, institutional, and mixed-use spaces.</small></span></label>
+              </div>
+              <div class="field-grid" style="margin-top:18px">
+                <div class="field"><label for="project-type">Work type *</label><select id="project-type" name="projectType" required><option value="new-build">New build</option><option value="renovation">Renovation</option><option value="extension">Extension / addition</option><option value="interior">Interior fit-out</option><option value="planning">Planning / feasibility</option></select></div>
+                <div class="field"><label for="project-stage">Current stage</label><select id="project-stage" name="projectStage"><option>Idea / early planning</option><option>Site secured</option><option>Existing drawings</option><option>Planning approval started</option><option>Construction started</option></select></div>
+                <div class="field"><label for="site-address">Site address *</label><input id="site-address" name="siteAddress" autocomplete="street-address" required /></div>
+                <div class="field"><label for="parish">Parish *</label><select id="parish" name="parish" required><option value="">Choose parish</option><option>Clarendon</option><option>Hanover</option><option>Kingston</option><option>Manchester</option><option>Portland</option><option>Saint Andrew</option><option>Saint Ann</option><option>Saint Catherine</option><option>Saint Elizabeth</option><option>Saint James</option><option>Saint Mary</option><option>Saint Thomas</option><option>Trelawny</option><option>Westmoreland</option><option>Outside Jamaica</option></select></div>
+                <div class="field"><label for="build-status">Project condition *</label><select id="build-status" name="buildStatus" required><option>New build</option><option>Renovation of existing structure</option><option>Extension / addition</option><option>Fit-out only</option></select></div>
+              </div>
+            </section>
+
+            <section class="wizard-step" data-step="2" data-title="Size and rooms">
+              <div class="step-number">Step 03 · Programme</div><h2>Describe the spaces the project must hold.</h2><p class="step-intro">Gross square footage drives the base calculation. Room counts help define the design scope and configured adjustments.</p>
+              <div class="field-grid">
+                <div class="field"><label for="square-feet">Gross square feet *</label><input id="square-feet" name="squareFeet" type="number" inputmode="decimal" min="100" max="2000000" step="1" required placeholder="5000" /></div>
+                <div class="field"><label for="floors">Number of floors *</label><input id="floors" name="floors" type="number" inputmode="numeric" min="1" max="100" value="1" required /></div>
+              </div>
+              <div class="counter-grid residential-rooms" style="margin-top:18px">
+                <label class="counter"><span>Bedrooms</span><input name="bedrooms" type="number" min="0" max="100" value="3" /></label>
+                <label class="counter"><span>Bathrooms</span><input name="bathrooms" type="number" min="0" max="100" value="2" /></label>
+                <label class="counter"><span>Kitchens</span><input name="kitchens" type="number" min="0" max="20" value="1" /></label>
+                <label class="counter"><span>Living / family rooms</span><input name="livingRooms" type="number" min="0" max="50" value="1" /></label>
+                <label class="counter"><span>Dining rooms</span><input name="diningRooms" type="number" min="0" max="50" value="1" /></label>
+                <label class="counter"><span>Other rooms</span><input name="otherRooms" type="number" min="0" max="100" value="0" /></label>
+              </div>
+              <div class="counter-grid commercial-rooms" hidden style="margin-top:18px">
+                <label class="counter"><span>Offices</span><input name="offices" type="number" min="0" max="500" value="4" /></label>
+                <label class="counter"><span>Commercial units</span><input name="commercialUnits" type="number" min="0" max="500" value="1" /></label>
+                <label class="counter"><span>Washrooms</span><input name="washrooms" type="number" min="0" max="200" value="2" /></label>
+                <label class="counter"><span>Meeting rooms</span><input name="meetingRooms" type="number" min="0" max="100" value="1" /></label>
+                <label class="counter"><span>Public / retail areas</span><input name="publicAreas" type="number" min="0" max="100" value="1" /></label>
+                <label class="counter"><span>Other spaces</span><input name="otherCommercial" type="number" min="0" max="500" value="0" /></label>
+              </div>
+            </section>
+
+            <section class="wizard-step" data-step="3" data-title="Services and timing">
+              <div class="step-number">Step 04 · Scope</div><h2>Where do you want our help?</h2><p class="step-intro">Choose every service you may need. Items without published rates remain clearly marked for separate review.</p>
+              <div class="service-grid">
+                <label class="service-choice"><input type="checkbox" name="services" value="architecture" checked /><span><strong>Architecture</strong><small>Concept through construction documentation.</small></span></label>
+                <label class="service-choice"><input type="checkbox" name="services" value="structural" /><span><strong>Structural engineering</strong><small>Review, calculations, coordination, and certification.</small></span></label>
+                <label class="service-choice"><input type="checkbox" name="services" value="mep" /><span><strong>MEP layouts</strong><small>Mechanical, electrical, plumbing, and drainage coordination.</small></span></label>
+                <label class="service-choice"><input type="checkbox" name="services" value="interiors" /><span><strong>Interior design</strong><small>Materials, lighting, furniture, and spatial identity.</small></span></label>
+                <label class="service-choice"><input type="checkbox" name="services" value="casework" /><span><strong>Kitchen / casework</strong><small>Planning and indicative cabinetry coordination.</small></span></label>
+                <label class="service-choice"><input type="checkbox" name="services" value="landscape" /><span><strong>Landscape / external</strong><small>Hardscape, softscape, and external planning.</small></span></label>
+                <label class="service-choice"><input type="checkbox" name="services" value="boq" /><span><strong>QS / Bill of Quantities</strong><small>Measurement, trade classification, and pricing structure.</small></span></label>
+                <label class="service-choice"><input type="checkbox" name="services" value="delivery" /><span><strong>Project delivery</strong><small>Coordination through construction and completion.</small></span></label>
+              </div>
+              <div class="field-grid" style="margin-top:18px">
+                <div class="field"><label for="currency">Estimate currency</label><select id="currency" name="currency"><option value="USD">USD</option><option value="JMD">JMD</option></select></div>
+                <div class="field"><label for="budget">Approximate construction budget</label><input id="budget" name="budget" placeholder="Optional range" /></div>
+                <div class="field"><label for="desired-start">Desired start</label><input id="desired-start" name="desiredStart" type="date" /></div>
+                <div class="field"><label for="target-completion">Target completion</label><input id="target-completion" name="targetCompletion" type="date" /></div>
+              </div>
+            </section>
+
+            <section class="wizard-step" data-step="4" data-title="Documents and intent">
+              <div class="step-number">Step 05 · Documents</div><h2>Show us what already exists.</h2><p class="step-intro">Upload plans, surveys, sketches, reference images, or schedules. Submitted files are immutable and visible only to you and the GFD workspace.</p>
+              <div class="field"><label for="scope">Project intent and priorities *</label><textarea id="scope" name="scope" required minlength="20" placeholder="Describe the experience, problems, must-have spaces, style, constraints, and anything we should understand."></textarea></div>
+              <div class="field" style="margin-top:16px"><label for="notes">Additional notes</label><textarea id="notes" name="notes" placeholder="Planning history, site conditions, accessibility needs, sustainability goals, or other context."></textarea></div>
+              <div class="upload-box"><label class="group-label" for="documents">Supporting documents</label><input id="documents" name="documents" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx,.dwg,.dxf,.skp" /><p class="upload-meta">Up to 10 files · 50 MB each · 200 MB total. PDF, images, Office documents, DWG, DXF, and SKP.</p><div class="file-list" id="file-list"></div></div>
+            </section>
+
+            <section class="wizard-step" data-step="5" data-title="Review and submit">
+              <div class="step-number">Step 06 · Review</div><h2>Review the application before it becomes a draft.</h2><p class="step-intro">The displayed amount is a preliminary planning estimate. Gerardo will review the complete application before a formal quotation is created or sent.</p>
+              <div class="review-summary" id="review-summary"></div>
+              <div style="display:grid;gap:10px;margin-top:18px">
+                <label class="consent-row"><input type="checkbox" name="privacyConsent" required /><span><strong>I consent to secure processing of this application and its documents.</strong><br /><small>Rejected or abandoned uploads are removed after 90 days; a minimal audit record is retained.</small></span></label>
+                <label class="consent-row"><input type="checkbox" name="estimateConsent" required /><span><strong>I understand this is not a quotation or invoice.</strong><br /><small>Pricing remains subject to scope verification, site conditions, consultant requirements, and final review.</small></span></label>
+                <label class="consent-row"><input type="checkbox" name="contactConsent" required /><span><strong>Gerardo Faustin Designs may contact me about this project.</strong></span></label>
+              </div>
+            </section>
+
+            <p class="error-message" id="form-error" role="alert"></p>
+            <div class="wizard-actions"><button class="wizard-button" id="previous-step" type="button" disabled>Previous</button><button class="wizard-button primary" id="next-step" type="button">Continue</button></div>
+          </div>
+
+          <section class="success-panel" id="success-panel" aria-live="polite"><div class="success-mark">✓</div><div class="step-number">Application received</div><h2>Your project is ready for review.</h2><p id="success-copy">A private draft and preliminary estimate have been prepared.</p><div class="success-actions"><button class="wizard-button primary" id="download-estimate" type="button">Download preliminary estimate</button><a class="wizard-button" href="index.html" style="display:inline-grid;place-items:center;text-decoration:none">Return to portfolio</a></div></section>
+        </form>
+
+        <aside class="estimate-card" aria-live="polite"><div class="estimate-label">Live planning estimate</div><h3 id="estimate-title">Residential project</h3><div class="estimate-row"><span>Base design fee</span><strong id="estimate-base">Enter square footage</strong></div><div class="estimate-row"><span>Configured add-ons</span><strong id="estimate-addons">—</strong></div><div class="estimate-range"><small>Preliminary range</small><strong id="estimate-range">Not calculated</strong></div><div class="estimate-row"><span>Rate snapshot</span><strong id="estimate-rate">USD 1.08 / sq. ft.</strong></div><p class="estimate-disclaimer">This live figure helps with early planning. The server recalculates every submitted amount from the published rate version. It is not a formal quotation or invoice.</p><span class="configuration-badge" id="configuration-badge">Configuration preview · not published</span></aside>
+      </div>
+    </main>
+    <script src="site-config.js"></script>
+    <script type="module" src="application.js"></script>
+  </body>
+</html>
