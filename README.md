@@ -14,7 +14,7 @@ Open `http://127.0.0.1:4173/index.html`. When Firebase is disabled, the wizard u
 
 Edit `site-config.js` with the public Firebase web configuration, reCAPTCHA Enterprise site key, and deployed Firebase Functions URLs. These values are public identifiers, not secrets. Email-provider credentials and any private keys belong in Google Secret Manager and must never be placed in this repository.
 
-Production submission remains blocked by the backend until the companion app publishes a complete pricing configuration. The seed value is USD 1.08/sq. ft. for residential work; commercial, add-on, and range configuration intentionally start incomplete.
+Production submission remains blocked by the backend until the companion app publishes a complete pricing configuration. The seed value is USD 1.28/sq. ft. for residential work; commercial, add-on, and range configuration intentionally start incomplete. Residential estimates use the entered fee-bearing programme area; circulation—including halls, corridors, stairs, landings, and connector areas—is recorded but excluded from that basis.
 
 ## Structure
 

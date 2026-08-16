@@ -27,7 +27,7 @@ window.GFD_CONFIG = Object.freeze({
     baseCurrency: "USD",
     usdToJmd: 156.0,
     rateUpdatedAt: "2026-08-16T00:00:00Z",
-    baseRates: { residential: 1.08, commercial: null },
+    baseRates: { residential: 1.28, commercial: null },
     lowMultiplier: 0.90,
     highMultiplier: 1.10,
     gctRate: 0,

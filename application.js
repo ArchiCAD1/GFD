@@ -29,6 +29,8 @@ const successPanel = document.querySelector("#success-panel");
 const downloadButton = document.querySelector("#download-estimate");
 const residentialRooms = document.querySelector(".residential-rooms");
 const commercialRooms = document.querySelector(".commercial-rooms");
+const feeAreaInput = document.querySelector("#square-feet");
+const chargeableAreaTotal = document.querySelector("#chargeable-area-total");
 
 let currentStep = 0;
 let emailVerified = false;
@@ -59,6 +61,7 @@ function setStep(index) {
   currentStep = Math.max(0, Math.min(steps.length - 1, index));
   steps.forEach((step, stepIndex) => step.classList.toggle("is-active", stepIndex === currentStep));
   previousButton.disabled = currentStep === 0;
+  previousButton.hidden = currentStep === 0;
   nextButton.textContent = currentStep === steps.length - 1 ? "Submit application" : "Continue";
   progressBar.style.setProperty("--progress", `${((currentStep + 1) / steps.length) * 100}%`);
   progressName.textContent = steps[currentStep].dataset.title;
@@ -92,6 +95,10 @@ function validateStep(index) {
     showError(firebaseReady ? "Verify your email using the secure link before continuing." : "Use Preview verification to continue in this local build.");
     return false;
   }
+  if (index === 2 && feeBearingArea() < 100) {
+    showError("Enter at least 100 sq. ft. of fee-bearing programmed area. Circulation is recorded separately and is not part of this figure.");
+    return false;
+  }
   return true;
 }
 
@@ -104,15 +111,42 @@ function rooms() {
     };
   }
   return {
-    bedrooms: numberValue("bedrooms"), bathrooms: numberValue("bathrooms"),
+    bedrooms: numberValue("bedrooms"),
+    bathrooms: numberValue("fullBathrooms") + numberValue("halfBathrooms"),
+    fullBathrooms: numberValue("fullBathrooms"), halfBathrooms: numberValue("halfBathrooms"),
     kitchens: numberValue("kitchens"), livingRooms: numberValue("livingRooms"),
-    diningRooms: numberValue("diningRooms"), otherRooms: numberValue("otherRooms")
+    familyRooms: numberValue("familyRooms"), diningRooms: numberValue("diningRooms"), otherRooms: numberValue("otherRooms")
   };
+}
+
+function areaSchedule() {
+  if (classification() === "commercial") {
+    return [{ id: "commercial-programme", label: "Commercial programmed area", category: "chargeable", squareFeet: numberValue("commercialSquareFeet") }];
+  }
+  return [...residentialRooms.querySelectorAll("[data-area-id]")].map(row => ({
+    id: row.dataset.areaId,
+    label: row.querySelector("span").textContent.trim(),
+    category: row.dataset.areaCategory,
+    squareFeet: Number(row.querySelectorAll("input")[1]?.value || 0)
+  }));
+}
+
+function feeBearingArea() {
+  return Math.round(areaSchedule().reduce((total, space) => total + Math.max(0, Number(space.squareFeet) || 0), 0));
+}
+
+function circulationArea() { return Math.max(0, numberValue("circulationArea")); }
+
+function syncFeeArea() {
+  const area = feeBearingArea();
+  feeAreaInput.value = area || "";
+  chargeableAreaTotal.textContent = `${area.toLocaleString()} sq. ft.`;
+  return area;
 }
 
 function calculateEstimate() {
   const projectClass = classification();
-  const area = numberValue("squareFeet");
+  const area = syncFeeArea();
   const baseRate = pricing.baseRates?.[projectClass];
   const conversion = currency() === "JMD" ? Number(pricing.usdToJmd || 0) : 1;
   let additionsUSD = 0;
@@ -158,8 +192,9 @@ function updateEstimate() {
   document.querySelector("#estimate-title").textContent = projectTitle;
   document.querySelector("#estimate-rate").textContent = Number.isFinite(latestEstimate.baseRate)
     ? `USD ${latestEstimate.baseRate.toFixed(2)} / sq. ft.` : "Rate pending configuration";
+  document.querySelector("#estimate-area").textContent = `${latestEstimate.area.toLocaleString()} sq. ft.`;
   if (!latestEstimate.complete) {
-    document.querySelector("#estimate-base").textContent = latestEstimate.area ? "Rate not published" : "Enter square footage";
+    document.querySelector("#estimate-base").textContent = latestEstimate.area ? "Rate not published" : "Enter scheduled area";
     document.querySelector("#estimate-addons").textContent = "Pending configuration";
     document.querySelector("#estimate-range").textContent = "Not calculated";
     return;
@@ -173,6 +208,7 @@ function toggleRoomProgramme() {
   const commercial = classification() === "commercial";
   residentialRooms.hidden = commercial;
   commercialRooms.hidden = !commercial;
+  document.querySelector("#gross-square-feet").closest(".field").hidden = commercial;
   updateEstimate();
 }
 
@@ -217,9 +253,10 @@ function collectPayload() {
     project: {
       classification: classification(), projectType: value("projectType"), stage: value("projectStage"),
       siteAddress: value("siteAddress"), parish: value("parish"), buildStatus: value("buildStatus"),
-      squareFeet: numberValue("squareFeet"), floors: numberValue("floors"), rooms: rooms(),
+      squareFeet: feeBearingArea(), chargeableSquareFeet: feeBearingArea(), grossSquareFeet: numberValue("grossSquareFeet"),
+      circulationSquareFeet: circulationArea(), areaSchedule: areaSchedule(), floors: numberValue("floors"), rooms: rooms(),
       services: checkedValues("services"), currency: currency(), budgetRange: value("budget"),
-      desiredStart: value("desiredStart"), targetCompletion: value("targetCompletion"), scope: value("scope"), notes: value("notes")
+      desiredStart: value("desiredStart"), targetCompletion: value("targetCompletion"), scope: value("scope"), style: value("style"), notes: value("notes")
     },
     consent: {
       privacy: Boolean(form.elements.privacyConsent?.checked),
@@ -240,8 +277,8 @@ function renderReview() {
     : "Pricing configuration is incomplete; this application will require manual pricing.";
   reviewSummary.innerHTML = `
     <div class="review-section"><h3>Applicant</h3><p>${escapeHTML(latestPayload.contact.name)} · ${escapeHTML(latestPayload.contact.email)} · ${escapeHTML(latestPayload.contact.phone)}</p></div>
-    <div class="review-section"><h3>Project</h3><p>${escapeHTML(latestPayload.project.classification)} ${escapeHTML(latestPayload.project.projectType)} · ${latestPayload.project.squareFeet.toLocaleString()} sq. ft. · ${latestPayload.project.floors} floor(s)<br>${escapeHTML(latestPayload.project.siteAddress)}</p></div>
-    <div class="review-section"><h3>Spaces and services</h3><p>${escapeHTML(roomText)}<br>${escapeHTML(serviceText)}</p></div>
+    <div class="review-section"><h3>Project</h3><p>${escapeHTML(latestPayload.project.classification)} ${escapeHTML(latestPayload.project.projectType)} · ${latestPayload.project.squareFeet.toLocaleString()} fee-bearing sq. ft. · ${latestPayload.project.floors} floor(s)<br>${escapeHTML(latestPayload.project.siteAddress)}</p></div>
+    <div class="review-section"><h3>Spaces and services</h3><p>${escapeHTML(roomText)}<br>Circulation recorded, excluded from fee: ${latestPayload.project.circulationSquareFeet.toLocaleString()} sq. ft.<br>${escapeHTML(serviceText)}</p></div>
     <div class="review-section"><h3>Preliminary range</h3><p>${escapeHTML(estimateText)}</p></div>`;
 }
 
@@ -252,7 +289,7 @@ async function verifyEmail() {
   try {
     if (!firebaseReady) {
       emailVerified = true;
-      verificationStatus.textContent = "Preview verification active. Production will require the secure Firebase email link.";
+      verificationStatus.textContent = "Preview verification active. Circulation—halls, stairways, landings, corridors, and connector spaces—is excluded from the preliminary estimate. Production will require the secure Firebase email link.";
       verifyButton.textContent = "Verified for preview";
       return;
     }
@@ -264,7 +301,7 @@ async function verifyEmail() {
       return;
     }
     await sendVerificationLink(emailField.value.trim());
-    verificationStatus.textContent = "A secure sign-in link was sent. Open it on this device to continue.";
+    verificationStatus.textContent = "A secure sign-in link was sent. Open it on this device to continue. Your preliminary estimate excludes circulation: halls, stairways, landings, corridors, and other connector spaces.";
     verifyButton.textContent = "Link sent";
   } catch (error) {
     showError(error.message || "Email verification could not be started.");
@@ -385,6 +422,10 @@ documentInput.addEventListener("change", event => {
   catch (error) { selectedFiles = []; documentInput.value = ""; renderFiles(); showError(error.message); }
 });
 form.addEventListener("input", event => {
+  if (event.target.name === "classification") toggleRoomProgramme();
+  updateEstimate();
+});
+form.addEventListener("change", event => {
   if (event.target.name === "classification") toggleRoomProgramme();
   updateEstimate();
 });

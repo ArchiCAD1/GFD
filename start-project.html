@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="application.css" />
+    <link rel="stylesheet" href="application.css?v=20260816-3" />
   </head>
   <body>
     <div class="application-atmosphere" aria-hidden="true"></div>
@@ -20,7 +20,7 @@
 
       <section class="application-intro">
         <div><div class="kicker">Project application · Private and review-led</div><h1>Tell us what you want to build.</h1></div>
-        <p>Share the site, spaces, timing, and documents behind your project. You will see a preliminary planning estimate before submitting; every formal quotation is personally reviewed.</p>
+        <div class="application-intro-copy"><p>Share the site, spaces, timing, style, and documents behind your project. You will see a preliminary planning estimate before submitting; every formal quotation is personally reviewed.</p><ol class="application-journey" aria-label="Application steps"><li>Verify</li><li>Describe</li><li>Schedule spaces</li><li>Upload</li></ol></div>
       </section>
 
       <div class="wizard-layout">
@@ -30,7 +30,7 @@
             <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
 
             <section class="wizard-step is-active" data-step="0" data-title="Your details">
-              <div class="step-number">Step 01 · Contact</div><h2>First, who are we designing for?</h2><p class="step-intro">Your email is verified before documents can be uploaded or an application submitted.</p>
+              <div class="step-number">Step 01 · Contact</div><h2>First, who are we designing for?</h2><p class="step-intro">Your email is verified before documents can be uploaded or an application submitted. Before you verify, please note that circulation space is excluded from this preliminary fee basis: halls, corridors, stairways, landings, and other areas that connect living spaces are recorded for planning, but not charged in this live estimate.</p>
               <div class="field-grid">
                 <div class="field"><label for="full-name">Full name *</label><input id="full-name" name="fullName" autocomplete="name" required /></div>
                 <div class="field"><label for="company">Company or organization</label><input id="company" name="company" autocomplete="organization" /></div>
@@ -38,7 +38,7 @@
                 <div class="field"><label for="phone">Phone / WhatsApp *</label><input id="phone" name="phone" type="tel" autocomplete="tel" required /></div>
                 <div class="field full"><label for="contact-method">Preferred contact method</label><select id="contact-method" name="preferredContact"><option>Email</option><option>WhatsApp</option><option>Phone call</option></select></div>
               </div>
-              <div class="verification-box"><div><strong>Email verification</strong><div class="verification-status" id="verification-status">Verification is required before submission.</div></div><button class="pill-button" id="verify-email" type="button">Verify email</button></div>
+              <div class="verification-box"><div><strong>Email verification</strong><div class="verification-status" id="verification-status">Verification is required before submission. The secure link also confirms that circulation space is excluded from the preliminary estimate.</div></div><button class="pill-button" id="verify-email" type="button">Verify email</button></div>
             </section>
 
             <section class="wizard-step" data-step="1" data-title="Project type">
@@ -57,21 +57,30 @@
               </div>
             </section>
 
-            <section class="wizard-step" data-step="2" data-title="Size and rooms">
-              <div class="step-number">Step 03 · Programme</div><h2>Describe the spaces the project must hold.</h2><p class="step-intro">Gross square footage drives the base calculation. Room counts help define the design scope and configured adjustments.</p>
+            <section class="wizard-step" data-step="2" data-title="Spaces and area">
+              <div class="step-number">Step 03 · Programme</div><h2>Describe the spaces the project must hold.</h2><p class="step-intro">Enter the number of rooms and the combined area for each type. The live fee uses only the chargeable programmed spaces below—not circulation. You can still tell us the total circulation area so the team understands the layout.</p>
+              <input id="square-feet" name="squareFeet" type="hidden" min="100" max="2000000" required />
               <div class="field-grid">
-                <div class="field"><label for="square-feet">Gross square feet *</label><input id="square-feet" name="squareFeet" type="number" inputmode="decimal" min="100" max="2000000" step="1" required placeholder="5000" /></div>
                 <div class="field"><label for="floors">Number of floors *</label><input id="floors" name="floors" type="number" inputmode="numeric" min="1" max="100" value="1" required /></div>
+                <div class="field"><label for="gross-square-feet">Gross building area (optional)</label><input id="gross-square-feet" name="grossSquareFeet" type="number" inputmode="decimal" min="0" max="2000000" step="1" placeholder="Includes halls and stairs" /></div>
               </div>
-              <div class="counter-grid residential-rooms" style="margin-top:18px">
-                <label class="counter"><span>Bedrooms</span><input name="bedrooms" type="number" min="0" max="100" value="3" /></label>
-                <label class="counter"><span>Bathrooms</span><input name="bathrooms" type="number" min="0" max="100" value="2" /></label>
-                <label class="counter"><span>Kitchens</span><input name="kitchens" type="number" min="0" max="20" value="1" /></label>
-                <label class="counter"><span>Living / family rooms</span><input name="livingRooms" type="number" min="0" max="50" value="1" /></label>
-                <label class="counter"><span>Dining rooms</span><input name="diningRooms" type="number" min="0" max="50" value="1" /></label>
-                <label class="counter"><span>Other rooms</span><input name="otherRooms" type="number" min="0" max="100" value="0" /></label>
+              <div class="residential-rooms" style="margin-top:22px">
+                <div class="area-schedule-heading"><div><span class="group-label">Residential area schedule</span><p>Area is total square footage across that room type.</p></div><div class="area-totals"><strong id="chargeable-area-total">0 sq. ft.</strong><span>Chargeable area</span></div></div>
+                <div class="area-schedule" role="group" aria-label="Residential area schedule">
+                  <div class="area-row area-row--header" aria-hidden="true"><span>Space type</span><span>Qty.</span><span>Total sq. ft.</span></div>
+                  <label class="area-row" data-area-id="bedrooms" data-area-category="living"><span>Bedrooms</span><input name="bedrooms" type="number" min="0" max="100" value="3" aria-label="Number of bedrooms" /><input name="bedroomArea" type="number" min="0" max="2000000" step="1" placeholder="e.g. 540" aria-label="Total bedroom area in square feet" /></label>
+                  <label class="area-row" data-area-id="livingRooms" data-area-category="living"><span>Living rooms</span><input name="livingRooms" type="number" min="0" max="50" value="1" aria-label="Number of living rooms" /><input name="livingArea" type="number" min="0" max="2000000" step="1" placeholder="e.g. 320" aria-label="Total living room area in square feet" /></label>
+                  <label class="area-row" data-area-id="familyRooms" data-area-category="living"><span>Family rooms</span><input name="familyRooms" type="number" min="0" max="50" value="0" aria-label="Number of family rooms" /><input name="familyArea" type="number" min="0" max="2000000" step="1" placeholder="Optional" aria-label="Total family room area in square feet" /></label>
+                  <label class="area-row" data-area-id="diningRooms" data-area-category="living"><span>Dining rooms</span><input name="diningRooms" type="number" min="0" max="50" value="1" aria-label="Number of dining rooms" /><input name="diningArea" type="number" min="0" max="2000000" step="1" placeholder="e.g. 180" aria-label="Total dining room area in square feet" /></label>
+                  <label class="area-row" data-area-id="kitchens" data-area-category="service"><span>Kitchens</span><input name="kitchens" type="number" min="0" max="20" value="1" aria-label="Number of kitchens" /><input name="kitchenArea" type="number" min="0" max="2000000" step="1" placeholder="e.g. 220" aria-label="Total kitchen area in square feet" /></label>
+                  <label class="area-row" data-area-id="fullBathrooms" data-area-category="wet"><span>Full bathrooms</span><input name="fullBathrooms" type="number" min="0" max="100" value="2" aria-label="Number of full bathrooms" /><input name="fullBathroomArea" type="number" min="0" max="2000000" step="1" placeholder="e.g. 140" aria-label="Total full bathroom area in square feet" /></label>
+                  <label class="area-row" data-area-id="halfBathrooms" data-area-category="wet"><span>Half bathrooms / powder rooms</span><input name="halfBathrooms" type="number" min="0" max="100" value="0" aria-label="Number of half bathrooms" /><input name="halfBathroomArea" type="number" min="0" max="2000000" step="1" placeholder="Optional" aria-label="Total half bathroom area in square feet" /></label>
+                  <label class="area-row" data-area-id="otherRooms" data-area-category="other"><span>Other chargeable spaces</span><input name="otherRooms" type="number" min="0" max="100" value="0" aria-label="Number of other chargeable spaces" /><input name="otherArea" type="number" min="0" max="2000000" step="1" placeholder="Study, laundry, etc." aria-label="Other chargeable space in square feet" /></label>
+                </div>
+                <div class="circulation-note"><div><span class="group-label">Circulation space · excluded from fee</span><p>Halls, corridors, stairs, landings, and other connector spaces are captured for planning only.</p></div><label><span class="sr-only">Circulation area in square feet</span><input id="circulation-area" name="circulationArea" type="number" min="0" max="2000000" step="1" placeholder="Circulation sq. ft." /></label></div>
               </div>
               <div class="counter-grid commercial-rooms" hidden style="margin-top:18px">
+                <div class="field full"><label for="commercial-square-feet">Fee-bearing programmed area *</label><input id="commercial-square-feet" name="commercialSquareFeet" type="number" inputmode="decimal" min="100" max="2000000" step="1" placeholder="Enter area excluding circulation" /></div>
                 <label class="counter"><span>Offices</span><input name="offices" type="number" min="0" max="500" value="4" /></label>
                 <label class="counter"><span>Commercial units</span><input name="commercialUnits" type="number" min="0" max="500" value="1" /></label>
                 <label class="counter"><span>Washrooms</span><input name="washrooms" type="number" min="0" max="200" value="2" /></label>
@@ -102,8 +111,9 @@
             </section>
 
             <section class="wizard-step" data-step="4" data-title="Documents and intent">
-              <div class="step-number">Step 05 · Documents</div><h2>Show us what already exists.</h2><p class="step-intro">Upload plans, surveys, sketches, reference images, or schedules. Submitted files are immutable and visible only to you and the GFD workspace.</p>
+              <div class="step-number">Step 05 · Documents</div><h2>Show us what already exists.</h2><p class="step-intro">Upload plans, surveys, sketches, reference images, or schedules. Tell us the architecture or interior style you are drawn to, too. Submitted files are immutable and visible only to you and the GFD workspace.</p>
               <div class="field"><label for="scope">Project intent and priorities *</label><textarea id="scope" name="scope" required minlength="20" placeholder="Describe the experience, problems, must-have spaces, style, constraints, and anything we should understand."></textarea></div>
+              <div class="field" style="margin-top:16px"><label for="style">Architectural style and references</label><textarea id="style" name="style" placeholder="Describe the materials, character, precedents, atmosphere, or visual references that feel right for this project."></textarea></div>
               <div class="field" style="margin-top:16px"><label for="notes">Additional notes</label><textarea id="notes" name="notes" placeholder="Planning history, site conditions, accessibility needs, sustainability goals, or other context."></textarea></div>
               <div class="upload-box"><label class="group-label" for="documents">Supporting documents</label><input id="documents" name="documents" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx,.dwg,.dxf,.skp" /><p class="upload-meta">Up to 10 files · 50 MB each · 200 MB total. PDF, images, Office documents, DWG, DXF, and SKP.</p><div class="file-list" id="file-list"></div></div>
             </section>
@@ -119,16 +129,17 @@
             </section>
 
             <p class="error-message" id="form-error" role="alert"></p>
-            <div class="wizard-actions"><button class="wizard-button" id="previous-step" type="button" disabled>Previous</button><button class="wizard-button primary" id="next-step" type="button">Continue</button></div>
+            <div class="wizard-actions"><button class="wizard-button" id="previous-step" type="button" disabled hidden>Previous</button><button class="wizard-button primary" id="next-step" type="button">Continue</button></div>
           </div>
 
           <section class="success-panel" id="success-panel" aria-live="polite"><div class="success-mark">✓</div><div class="step-number">Application received</div><h2>Your project is ready for review.</h2><p id="success-copy">A private draft and preliminary estimate have been prepared.</p><div class="success-actions"><button class="wizard-button primary" id="download-estimate" type="button">Download preliminary estimate</button><a class="wizard-button" href="index.html" style="display:inline-grid;place-items:center;text-decoration:none">Return to portfolio</a></div></section>
         </form>
 
-        <aside class="estimate-card" aria-live="polite"><div class="estimate-label">Live planning estimate</div><h3 id="estimate-title">Residential project</h3><div class="estimate-row"><span>Base design fee</span><strong id="estimate-base">Enter square footage</strong></div><div class="estimate-row"><span>Configured add-ons</span><strong id="estimate-addons">—</strong></div><div class="estimate-range"><small>Preliminary range</small><strong id="estimate-range">Not calculated</strong></div><div class="estimate-row"><span>Rate snapshot</span><strong id="estimate-rate">USD 1.08 / sq. ft.</strong></div><p class="estimate-disclaimer">This live figure helps with early planning. The server recalculates every submitted amount from the published rate version. It is not a formal quotation or invoice.</p><span class="configuration-badge" id="configuration-badge">Configuration preview · not published</span></aside>
+        <aside class="estimate-card" aria-live="polite"><div class="estimate-label">Live planning estimate</div><h3 id="estimate-title">Residential project</h3><div class="estimate-row"><span>Base design fee</span><strong id="estimate-base">Enter scheduled area</strong></div><div class="estimate-row"><span>Fee-bearing area</span><strong id="estimate-area">0 sq. ft.</strong></div><div class="estimate-row"><span>Configured add-ons</span><strong id="estimate-addons">—</strong></div><div class="estimate-range"><small>Preliminary range</small><strong id="estimate-range">Not calculated</strong></div><div class="estimate-row"><span>Rate snapshot</span><strong id="estimate-rate">USD 1.28 / sq. ft.</strong></div><p class="estimate-disclaimer">Circulation—halls, stairways, landings, corridors, and other connector spaces—is excluded from this live fee basis. The server recalculates every submitted amount from the published rate version. This is not a formal quotation or invoice.</p><span class="configuration-badge" id="configuration-badge">Configuration preview · not published</span></aside>
       </div>
     </main>
-    <script src="site-config.js"></script>
-    <script type="module" src="application.js"></script>
+    <script src="site-config.js?v=20260816-2"></script>
+    <script src="application-experience.js?v=20260816-2"></script>
+    <script type="module" src="application.js?v=20260816-2"></script>
   </body>
 </html>

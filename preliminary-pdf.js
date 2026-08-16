@@ -22,7 +22,8 @@ export function createPreliminaryEstimatePDF({ reference, payload, estimate, mon
     ["CONTACT", `${contact.email} - ${contact.phone}`],
     ["PROJECT", `${project.classification} - ${project.projectType}`],
     ["SITE", `${project.siteAddress}, ${project.parish}`],
-    ["AREA", `${Number(project.squareFeet).toLocaleString()} sq. ft. - ${project.floors} floor(s)`]
+    ["FEE AREA", `${Number(project.chargeableSquareFeet ?? project.squareFeet).toLocaleString()} sq. ft. - ${project.floors} floor(s)`],
+    ["CIRCULATION", `${Number(project.circulationSquareFeet ?? 0).toLocaleString()} sq. ft. - excluded from fee basis`]
   ];
   if (estimate?.complete) {
     lines.push(["BASE", money(estimate.base, estimate.currency)]);
@@ -47,7 +48,7 @@ export function createPreliminaryEstimatePDF({ reference, payload, estimate, mon
   for (const [index, line] of wrap(project.scope, 94).slice(0, 12).entries()) {
     commands.push(`BT /F1 9 Tf 0.075 0.145 0.24 rg 38 ${y - 25 - index * 14} Td (${pdfText(line)}) Tj ET`);
   }
-  const disclaimer = "This preliminary planning estimate is generated from applicant-supplied information and a pricing snapshot. It is not a quotation, invoice, offer, or contract. Final fees require owner review, verified scope, site conditions, consultant requirements, statutory obligations, exclusions, and deliverables.";
+  const disclaimer = "This preliminary planning estimate is generated from applicant-supplied information and a pricing snapshot. Circulation space—including halls, corridors, stairs, landings, and other connector areas—is recorded for planning but excluded from this fee basis. It is not a quotation, invoice, offer, or contract. Final fees require owner review, verified scope, site conditions, consultant requirements, statutory obligations, exclusions, and deliverables.";
   for (const [index, line] of wrap(disclaimer, 105).entries()) commands.push(`BT /F1 7.5 Tf 0.075 0.145 0.24 rg 38 ${58 - index * 10} Td (${pdfText(line)}) Tj ET`);
   const stream = `${commands.join("\n")}\n`;
   const objects = [
