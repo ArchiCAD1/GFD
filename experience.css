@@ -201,6 +201,29 @@
 
 .intro > div:last-child .intro-stat { margin-top: auto; }
 
+.intro-stat {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(12px, 2vw, 24px);
+  line-height: 1.25;
+}
+
+.intro-stat span {
+  min-width: 0;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+}
+
+.intro-stat span:last-child { text-align: right; }
+
+.intro-stat b {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 2.8vw, 2.25rem) !important;
+  line-height: 0.85;
+  letter-spacing: -0.035em;
+}
+
 .hero-copy > .eyebrow {
   flex-wrap: nowrap;
   white-space: nowrap;
@@ -307,42 +330,42 @@
 
 .contact-glass {
   border-radius: var(--radius-lg) !important;
-  border-color: rgba(230, 240, 232, 0.30) !important;
+  border-color: rgba(255, 255, 255, 0.56) !important;
   background:
-    radial-gradient(circle at 78% 10%, rgba(190, 154, 89, 0.13), transparent 28%),
-    linear-gradient(145deg, rgba(8, 22, 15, 0.76), rgba(13, 29, 21, 0.55) 56%, rgba(4, 13, 9, 0.66)) !important;
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.22), inset -20px -20px 48px rgba(2, 10, 6, 0.24), var(--glass-shadow) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(1.38) !important;
-  backdrop-filter: blur(24px) saturate(1.38) !important;
+    radial-gradient(circle at 78% 10%, rgba(255, 255, 255, 0.31), transparent 29%),
+    linear-gradient(145deg, rgba(225, 234, 226, 0.49), rgba(197, 213, 202, 0.32) 56%, rgba(240, 244, 238, 0.24)) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.82), inset -20px -20px 48px rgba(23, 54, 38, 0.09), var(--glass-shadow) !important;
+  -webkit-backdrop-filter: blur(21px) saturate(1.32) !important;
+  backdrop-filter: blur(21px) saturate(1.32) !important;
 }
 
 .contact-copy {
   padding: clamp(24px, 3.8vw, 48px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.58);
   border-radius: var(--radius-md);
-  background: linear-gradient(145deg, rgba(4, 15, 9, 0.56), rgba(18, 38, 27, 0.30));
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.14), 0 24px 54px rgba(0, 0, 0, 0.18);
-  -webkit-backdrop-filter: blur(18px) saturate(1.35);
-  backdrop-filter: blur(18px) saturate(1.35);
+  background: linear-gradient(145deg, rgba(242, 246, 240, 0.62), rgba(218, 229, 220, 0.42));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.86), 0 24px 54px rgba(0, 0, 0, 0.14);
+  -webkit-backdrop-filter: blur(22px) saturate(1.28);
+  backdrop-filter: blur(22px) saturate(1.28);
 }
 
 .contact .eyebrow {
-  color: #d7e2d4 !important;
+  color: #244b38 !important;
   font-weight: 600;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.66);
+  text-shadow: 0 1px rgba(255, 255, 255, 0.58);
 }
 
 .contact h2 {
-  color: #f5f2e9 !important;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.62) !important;
+  color: #0d2117 !important;
+  text-shadow: 0 1px rgba(255, 255, 255, 0.66), 0 8px 24px rgba(255, 255, 255, 0.20) !important;
 }
 
 .contact-actions .button {
   border-radius: 999px !important;
-  border-color: rgba(255, 255, 255, 0.42) !important;
-  background: linear-gradient(135deg, rgba(247, 250, 247, 0.21), rgba(247, 250, 247, 0.09)) !important;
-  color: #ffffff !important;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.42);
+  border-color: rgba(14, 34, 23, 0.42) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.52), rgba(240, 245, 240, 0.28)) !important;
+  color: #102018 !important;
+  text-shadow: none;
 }
 
 .contact-actions .button:hover,
@@ -353,8 +376,9 @@
 }
 
 .contact-identity p {
-  color: #d7e2d4 !important;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.64);
+  color: #173c2b !important;
+  font-weight: 600;
+  text-shadow: 0 1px rgba(255, 255, 255, 0.52);
 }
 
 .contact-logo-card {
