@@ -26,9 +26,9 @@ Production submission remains disabled in the checked-in configuration until the
 ## Deployment
 
 - GitHub Pages workflow: `.github/workflows/pages.yml`
-- Intended repository: `ArchiCAD1/GerardoFaustinDesigns`
-- Intended portfolio: `https://archicad1.github.io/GerardoFaustinDesigns/`
-- Intended application: `https://archicad1.github.io/GerardoFaustinDesigns/start-project.html`
+- Repository: `ArchiCAD1/GFD`
+- Portfolio: `https://archicad1.github.io/GFD/`
+- Application: `https://archicad1.github.io/GFD/start-project.html`
 - Firebase deployment source and setup runbook: `firebase/FIREBASE_DEPLOYMENT.md`
 
 The Pages workflow publishes only the static website artifact. Firebase Admin code, local caches, tests, PDFs, and secrets are excluded from the hosted artifact.
