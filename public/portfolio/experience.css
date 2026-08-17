@@ -307,28 +307,54 @@
 
 .contact-glass {
   border-radius: var(--radius-lg) !important;
-  border-color: rgba(255, 255, 255, 0.50) !important;
+  border-color: rgba(230, 240, 232, 0.30) !important;
   background:
-    radial-gradient(circle at 78% 10%, rgba(255, 255, 255, 0.28), transparent 26%),
-    linear-gradient(145deg, rgba(242, 247, 241, 0.34), rgba(213, 226, 216, 0.18) 56%, rgba(255, 255, 255, 0.10)) !important;
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.86), inset -20px -20px 48px rgba(25, 60, 42, 0.08), var(--glass-shadow) !important;
-  -webkit-backdrop-filter: blur(17px) saturate(1.42) !important;
-  backdrop-filter: blur(17px) saturate(1.42) !important;
+    radial-gradient(circle at 78% 10%, rgba(190, 154, 89, 0.13), transparent 28%),
+    linear-gradient(145deg, rgba(8, 22, 15, 0.76), rgba(13, 29, 21, 0.55) 56%, rgba(4, 13, 9, 0.66)) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.22), inset -20px -20px 48px rgba(2, 10, 6, 0.24), var(--glass-shadow) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.38) !important;
+  backdrop-filter: blur(24px) saturate(1.38) !important;
+}
+
+.contact-copy {
+  padding: clamp(24px, 3.8vw, 48px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, rgba(4, 15, 9, 0.56), rgba(18, 38, 27, 0.30));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.14), 0 24px 54px rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
 }
 
 .contact .eyebrow {
-  color: var(--rich-green) !important;
+  color: #d7e2d4 !important;
   font-weight: 600;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.54);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.66);
 }
 
 .contact h2 {
-  color: #0c1a13 !important;
+  color: #f5f2e9 !important;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.62) !important;
 }
 
 .contact-actions .button {
   border-radius: 999px !important;
-  background: rgba(247, 250, 247, 0.30) !important;
+  border-color: rgba(255, 255, 255, 0.42) !important;
+  background: linear-gradient(135deg, rgba(247, 250, 247, 0.21), rgba(247, 250, 247, 0.09)) !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.42);
+}
+
+.contact-actions .button:hover,
+.contact-actions .button:focus-visible {
+  background: rgba(247, 245, 237, 0.96) !important;
+  color: #102018 !important;
+  text-shadow: none;
+}
+
+.contact-identity p {
+  color: #d7e2d4 !important;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.64);
 }
 
 .contact-logo-card {
