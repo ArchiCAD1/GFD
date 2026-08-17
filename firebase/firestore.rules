@@ -1,0 +1,48 @@
+rules_version = '2';
+
+// Workspace access is authorized by custom claims issued only from a trusted
+// Admin SDK environment. The client must never be able to create or change
+// membership documents or its own role.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isWorkspaceMember(workspaceId) {
+      return signedIn()
+        && request.auth.token.workspace_id == workspaceId
+        && request.auth.token.workspace_role in ['admin', 'editor', 'reviewer'];
+    }
+
+    function canWriteWorkspace(workspaceId) {
+      return isWorkspaceMember(workspaceId)
+        && request.auth.token.workspace_role in ['admin', 'editor'];
+    }
+
+    // Server-provisioned identity metadata. Direct client writes are forbidden.
+    match /workspaceMemberships/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+      allow list, create, update, delete: if false;
+    }
+
+    // Shared reference catalog: authenticated users may read it, but only a
+    // trusted Admin SDK environment may publish or modify catalog content.
+    match /library/{document=**} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    // All business data is scoped to a server-issued workspace claim. This
+    // applies recursively to projects, invoices, BoQ categories, versions,
+    // clients, tombstones, custom databases, and standard items.
+    match /workspaces/{workspaceId}/{document=**} {
+      allow read: if isWorkspaceMember(workspaceId);
+      allow create, update, delete: if canWriteWorkspace(workspaceId);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

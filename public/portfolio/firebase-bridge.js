@@ -79,3 +79,13 @@ export async function uploadIntakeFile({ uid, applicationId, attachmentId, file,
   });
   return { id: attachmentId, path, name: safeName, size: file.size, type: file.type || "application/octet-stream", sha256 };
 }
+
+export async function downloadEstimateFile(path) {
+  if (!storage || !storageModule || !path) throw new Error("The secure estimate is not available yet.");
+  const url = await storageModule.getDownloadURL(storageModule.ref(storage, path));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = path.split("/").pop() || "GFD-preliminary-estimate.pdf";
+  link.rel = "noopener";
+  link.click();
+}

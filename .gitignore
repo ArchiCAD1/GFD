@@ -9,5 +9,9 @@ assets/quiet-rooms.png
 /dist/
 /.wrangler/
 /outputs/
+/tmp/
 /work/
+/firebase/functions/node_modules/
+/firebase/functions/lib/
+/firebase/.firebase/
 .env*

@@ -11,9 +11,9 @@ window.GFD_CONFIG = Object.freeze({
   },
   functions: {
     region: "us-east1",
-    getPublicPricing: "",
-    createUploadSession: "",
-    submitProjectApplication: ""
+    getPublicPricing: "https://us-east1-gerardo-faustin-app.cloudfunctions.net/getPublicPricing",
+    createUploadSession: "https://us-east1-gerardo-faustin-app.cloudfunctions.net/createUploadSession",
+    submitProjectApplication: "https://us-east1-gerardo-faustin-app.cloudfunctions.net/submitProjectApplication"
   },
   application: {
     maxFiles: 10,

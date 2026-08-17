@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="application.css?v=20260816-3" />
+    <link rel="stylesheet" href="application.css?v=20260816-4" />
   </head>
   <body>
     <div class="application-atmosphere" aria-hidden="true"></div>
@@ -36,7 +36,7 @@
                 <div class="field"><label for="company">Company or organization</label><input id="company" name="company" autocomplete="organization" /></div>
                 <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
                 <div class="field"><label for="phone">Phone / WhatsApp *</label><input id="phone" name="phone" type="tel" autocomplete="tel" required /></div>
-                <div class="field full"><label for="contact-method">Preferred contact method</label><select id="contact-method" name="preferredContact"><option>Email</option><option>WhatsApp</option><option>Phone call</option></select></div>
+                <div class="field full"><label for="contact-method">Preferred contact method</label><select id="contact-method" name="preferredContact"><option value="email">Email</option><option value="whatsapp">WhatsApp</option><option value="phone">Phone call</option></select></div>
               </div>
               <div class="verification-box"><div><strong>Email verification</strong><div class="verification-status" id="verification-status">Verification is required before submission. The secure link also confirms that circulation space is excluded from the preliminary estimate.</div></div><button class="pill-button" id="verify-email" type="button">Verify email</button></div>
             </section>
@@ -132,14 +132,14 @@
             <div class="wizard-actions"><button class="wizard-button" id="previous-step" type="button" disabled hidden>Previous</button><button class="wizard-button primary" id="next-step" type="button">Continue</button></div>
           </div>
 
-          <section class="success-panel" id="success-panel" aria-live="polite"><div class="success-mark">✓</div><div class="step-number">Application received</div><h2>Your project is ready for review.</h2><p id="success-copy">A private draft and preliminary estimate have been prepared.</p><div class="success-actions"><button class="wizard-button primary" id="download-estimate" type="button">Download preliminary estimate</button><a class="wizard-button" href="index.html" style="display:inline-grid;place-items:center;text-decoration:none">Return to portfolio</a></div></section>
+          <section class="success-panel" id="success-panel" aria-live="polite"><div class="success-mark">✓</div><div class="step-number">Application received</div><h2>Your project is ready for review.</h2><p id="success-copy">A private draft and preliminary estimate have been prepared.</p><div class="delivery-status" id="delivery-status" hidden></div><div class="success-actions"><button class="wizard-button primary" id="download-estimate" type="button">Download preliminary estimate</button><a class="wizard-button" href="index.html" style="display:inline-grid;place-items:center;text-decoration:none">Return to portfolio</a></div></section>
         </form>
 
         <aside class="estimate-card" aria-live="polite"><div class="estimate-label">Live planning estimate</div><h3 id="estimate-title">Residential project</h3><div class="estimate-row"><span>Base design fee</span><strong id="estimate-base">Enter scheduled area</strong></div><div class="estimate-row"><span>Fee-bearing area</span><strong id="estimate-area">0 sq. ft.</strong></div><div class="estimate-row"><span>Configured add-ons</span><strong id="estimate-addons">—</strong></div><div class="estimate-range"><small>Preliminary range</small><strong id="estimate-range">Not calculated</strong></div><div class="estimate-row"><span>Rate snapshot</span><strong id="estimate-rate">USD 1.28 / sq. ft.</strong></div><p class="estimate-disclaimer">Circulation—halls, stairways, landings, corridors, and other connector spaces—is excluded from this live fee basis. The server recalculates every submitted amount from the published rate version. This is not a formal quotation or invoice.</p><span class="configuration-badge" id="configuration-badge">Configuration preview · not published</span></aside>
       </div>
     </main>
-    <script src="site-config.js?v=20260816-2"></script>
-    <script src="application-experience.js?v=20260816-2"></script>
-    <script type="module" src="application.js?v=20260816-2"></script>
+    <script src="site-config.js?v=20260816-4"></script>
+    <script src="application-experience.js?v=20260816-4"></script>
+    <script type="module" src="application.js?v=20260816-4"></script>
   </body>
 </html>

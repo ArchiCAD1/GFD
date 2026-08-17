@@ -1,0 +1,53 @@
+rules_version = '2';
+
+// Storage mirrors the Firestore workspace boundary. Membership and roles are
+// server-issued custom claims; clients cannot alter their own access level.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isWorkspaceMember(workspaceId) {
+      return signedIn()
+        && request.auth.token.workspace_id == workspaceId
+        && request.auth.token.workspace_role in ['admin', 'editor', 'reviewer'];
+    }
+
+    function canWriteWorkspace(workspaceId) {
+      return isWorkspaceMember(workspaceId)
+        && request.auth.token.workspace_role in ['admin', 'editor'];
+    }
+
+    match /workspaces/{workspaceId}/artifacts/{artifactName} {
+      allow read: if isWorkspaceMember(workspaceId);
+      allow create: if canWriteWorkspace(workspaceId)
+        && request.resource.size < 50 * 1024 * 1024
+        && request.resource.metadata.sha256 is string;
+      // Content-addressed artifacts are immutable. Re-uploading the same bytes
+      // is harmless but object metadata cannot be silently changed.
+      allow update, delete: if false;
+    }
+
+    // Verified applicants may create only immutable intake objects within their
+    // own UID/application namespace. Functions validate file signatures and the
+    // 200 MB aggregate limit before accepting the application.
+    match /intakeUploads/{uid}/{applicationId}/{attachmentId} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create: if signedIn()
+        && request.auth.uid == uid
+        && request.auth.token.email_verified == true
+        && request.resource.size > 0
+        && request.resource.size <= 50 * 1024 * 1024
+        && request.resource.metadata.sha256.matches('^[a-fA-F0-9]{64}$')
+        && request.resource.metadata.originalName.size() <= 180;
+      allow update, delete: if false;
+    }
+
+    match /workspaces/{workspaceId}/projectApplications/{applicationId}/{fileName} {
+      allow read: if isWorkspaceMember(workspaceId)
+        || (signedIn() && resource.metadata.ownerUid == request.auth.uid);
+      allow write: if false;
+    }
+  }
+}

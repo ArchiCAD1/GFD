@@ -1,0 +1,43 @@
+{
+  "version": "gfd-2026-08-v1",
+  "effectiveDate": "2026-08-16",
+  "published": true,
+  "complete": true,
+  "baseRates": {
+    "residential": 1.28,
+    "commercial": 1.28
+  },
+  "roomRates": {
+    "bedrooms": 0,
+    "fullBathrooms": 0,
+    "halfBathrooms": 0,
+    "kitchens": 0,
+    "livingRooms": 0,
+    "familyRooms": 0,
+    "diningRooms": 0,
+    "otherRooms": 0,
+    "offices": 0,
+    "commercialUnits": 0,
+    "washrooms": 0,
+    "meetingRooms": 0,
+    "publicAreas": 0,
+    "otherCommercial": 0
+  },
+  "serviceRates": {
+    "architecture": 0,
+    "structural": 0,
+    "mep": 0,
+    "interiors": 0,
+    "casework": 0,
+    "landscape": 0,
+    "boq": 0,
+    "delivery": 0
+  },
+  "lowMultiplier": 0.9,
+  "highMultiplier": 1.1,
+  "gctPercent": 0,
+  "includeGCT": false,
+  "enabledCurrencies": ["USD", "JMD"],
+  "usdToJmd": 156,
+  "exchangeRateAsOf": "2026-08-16"
+}

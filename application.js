@@ -6,7 +6,8 @@ import {
   initializeFirebase,
   isConfigured as firebaseIsConfigured,
   sendVerificationLink,
-  uploadIntakeFile
+  uploadIntakeFile,
+  downloadEstimateFile
 } from "./firebase-bridge.js";
 import { createPreliminaryEstimatePDF } from "./preliminary-pdf.js";
 
@@ -27,6 +28,7 @@ const reviewSummary = document.querySelector("#review-summary");
 const wizardContent = document.querySelector("#wizard-content");
 const successPanel = document.querySelector("#success-panel");
 const downloadButton = document.querySelector("#download-estimate");
+const deliveryStatus = document.querySelector("#delivery-status");
 const residentialRooms = document.querySelector(".residential-rooms");
 const commercialRooms = document.querySelector(".commercial-rooms");
 const feeAreaInput = document.querySelector("#square-feet");
@@ -40,6 +42,25 @@ let latestEstimate = null;
 let latestPayload = null;
 let latestReference = null;
 let firebaseReady = false;
+let latestSubmissionResult = null;
+
+const labels = Object.freeze({
+  bedrooms: "bedrooms", bathrooms: "bathrooms", fullBathrooms: "full bathrooms",
+  halfBathrooms: "half bathrooms", kitchens: "kitchens", livingRooms: "living rooms",
+  familyRooms: "family rooms", diningRooms: "dining rooms", otherRooms: "other rooms",
+  offices: "offices", commercialUnits: "commercial units", washrooms: "washrooms",
+  meetingRooms: "meeting rooms", publicAreas: "public / retail areas", otherCommercial: "other spaces",
+  architecture: "Architecture", structural: "Structural engineering", mep: "MEP layouts",
+  interiors: "Interior design", casework: "Kitchen / casework", landscape: "Landscape / external works",
+  boq: "QS / Bill of Quantities", delivery: "Project delivery"
+});
+
+const humanize = key => labels[key] || String(key).replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[-_]/g, " ").replace(/^./, value => value.toUpperCase());
+const countLabel = (key, count) => {
+  const label = humanize(key);
+  if (count !== 1) return label;
+  return label.replace(/ies$/, "y").replace(/rooms$/, "room").replace(/s$/, "");
+};
 
 const money = (amount, currency) => new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -155,14 +176,14 @@ function calculateEstimate() {
     const rate = Number(pricing.roomRates?.[key] ?? pricing.roomAddOns?.[projectClass]?.[key] ?? 0);
     if (count > 0 && rate > 0) {
       additionsUSD += count * rate;
-      detail.push({ label: key, quantity: count, rate });
+      detail.push({ label: humanize(key), quantity: count, rate });
     }
   });
   checkedValues("services").forEach(service => {
     const rate = Number(pricing.serviceRates?.[service] ?? pricing.serviceAddOns?.[projectClass]?.[service] ?? 0);
     if (rate > 0) {
       additionsUSD += rate;
-      detail.push({ label: service, quantity: 1, rate });
+      detail.push({ label: humanize(service), quantity: 1, rate });
     }
   });
   const complete = Number.isFinite(baseRate) && baseRate > 0 && area >= 100 && conversion > 0;
@@ -270,8 +291,8 @@ function collectPayload() {
 
 function renderReview() {
   latestPayload = collectPayload();
-  const roomText = Object.entries(latestPayload.project.rooms).filter(([, count]) => count > 0).map(([name, count]) => `${count} ${name}`).join(", ") || "No room counts supplied";
-  const serviceText = latestPayload.project.services.length ? latestPayload.project.services.join(", ") : "No services selected";
+  const roomText = Object.entries(latestPayload.project.rooms).filter(([name, count]) => name !== "bathrooms" && count > 0).map(([name, count]) => `${count} ${countLabel(name, count)}`).join(", ") || "No room counts supplied";
+  const serviceText = latestPayload.project.services.length ? latestPayload.project.services.map(humanize).join(", ") : "No services selected";
   const estimateText = latestPayload.clientEstimate
     ? `${money(latestPayload.clientEstimate.low, currency())} – ${money(latestPayload.clientEstimate.high, currency())}`
     : "Pricing configuration is incomplete; this application will require manual pricing.";
@@ -356,6 +377,7 @@ async function submitApplication() {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "The application could not be submitted.");
+      latestSubmissionResult = result;
       latestReference = result.reference;
       latestEstimate = result.estimate || latestEstimate;
       if (result.estimate) {
@@ -375,8 +397,17 @@ async function submitApplication() {
     wizardContent.hidden = true;
     successPanel.classList.add("is-visible");
     document.querySelector("#success-copy").textContent = firebaseReady
-      ? `Reference ${latestReference}. Your preliminary estimate is being prepared and the GFD application inbox has been notified.`
+      ? `Reference ${latestReference}. Your application is secure and ready for Gerardo's review.`
       : `Reference ${latestReference}. This local preview saved the application on this device; cloud delivery activates when Firebase is configured.`;
+    if (firebaseReady && latestSubmissionResult) {
+      const applicant = latestSubmissionResult.applicantEmailStatus || "queued";
+      const owner = latestSubmissionResult.ownerEmailStatus || "queued";
+      deliveryStatus.hidden = false;
+      deliveryStatus.innerHTML = `<strong>Delivery status</strong><br>Applicant confirmation: ${escapeHTML(applicant)} · Studio notification: ${escapeHTML(owner)}. Email is processed securely and may take a few moments.`;
+    } else {
+      deliveryStatus.hidden = false;
+      deliveryStatus.innerHTML = "<strong>Preview only</strong><br>No email was sent and no cloud record was created because Firebase production configuration is not active.";
+    }
     successPanel.scrollIntoView({ behavior: "smooth", block: "center" });
   } catch (error) {
     showError(error.message || "The application could not be submitted.");
@@ -401,8 +432,12 @@ async function loadPricing() {
 }
 
 async function generateEstimatePDF() {
+  if (firebaseReady && latestSubmissionResult?.estimatePDFPath) {
+    await downloadEstimateFile(latestSubmissionResult.estimatePDFPath);
+    return;
+  }
   if (!latestPayload) latestPayload = collectPayload();
-  const blob = createPreliminaryEstimatePDF({ reference: latestReference, payload: latestPayload, estimate: latestPayload.clientEstimate, money });
+  const blob = await createPreliminaryEstimatePDF({ reference: latestReference, payload: latestPayload, estimate: latestPayload.clientEstimate, money });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url; link.download = `${latestReference || "GFD-preliminary-estimate"}.pdf`;
@@ -430,7 +465,38 @@ form.addEventListener("change", event => {
   updateEstimate();
 });
 
+function enhanceCountInputs() {
+  const countNames = new Set(["floors", "bedrooms", "livingRooms", "familyRooms", "diningRooms", "kitchens", "fullBathrooms", "halfBathrooms", "otherRooms", "offices", "commercialUnits", "washrooms", "meetingRooms", "publicAreas", "otherCommercial"]);
+  [...form.querySelectorAll('input[type="number"]')].filter(input => countNames.has(input.name)).forEach(input => {
+    if (input.parentElement?.classList.contains("number-stepper")) return;
+    const shell = document.createElement("span");
+    shell.className = "number-stepper";
+    input.before(shell);
+    shell.append(input);
+    const decrement = document.createElement("button");
+    const increment = document.createElement("button");
+    decrement.type = increment.type = "button";
+    decrement.className = increment.className = "stepper-button";
+    decrement.textContent = "−";
+    increment.textContent = "+";
+    decrement.setAttribute("aria-label", `Decrease ${humanize(input.name)}`);
+    increment.setAttribute("aria-label", `Increase ${humanize(input.name)}`);
+    shell.prepend(decrement);
+    shell.append(increment);
+    const adjust = direction => {
+      const step = Number(input.step || 1);
+      const min = Number.isFinite(Number(input.min)) ? Number(input.min) : 0;
+      const max = Number.isFinite(Number(input.max)) ? Number(input.max) : Number.MAX_SAFE_INTEGER;
+      input.value = String(Math.max(min, Math.min(max, Number(input.value || 0) + direction * step)));
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+    decrement.addEventListener("click", () => adjust(-1));
+    increment.addEventListener("click", () => adjust(1));
+  });
+}
+
 async function boot() {
+  enhanceCountInputs();
   try {
     const firebase = await initializeFirebase(config.firebase);
     firebaseReady = Boolean(firebase && firebaseIsConfigured());
