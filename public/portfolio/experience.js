@@ -30,8 +30,11 @@
   const rain = Array.from({ length: Math.round(170 * quality) }, (_, i) => ({
     x: (i * 0.754877666) % 1,
     y: (i * 0.56984029) % 1,
-    speed: 0.6 + (i % 7) * 0.09,
-    length: 10 + (i % 9) * 2
+    speed: 0.42 + (i % 7) * 0.055,
+    length: 3 + (i % 5) * 1.35,
+    size: 0.55 + (i % 4) * 0.22,
+    opacity: 0.18 + (i % 6) * 0.055,
+    depth: 0.55 + (i % 5) * 0.11
   }));
   const stars = Array.from({ length: Math.round(105 * quality) }, (_, i) => ({
     x: (i * 0.683281573) % 1,
@@ -113,21 +116,31 @@
 
     if (rainAlpha > 0.01) {
       ctx.save();
-      ctx.lineWidth = 0.75;
-      ctx.strokeStyle = `rgba(196,224,229,${0.18 + rainAlpha * 0.34})`;
-      rain.forEach(drop => {
+      rain.forEach((drop, i) => {
         if (!reduced) {
-          drop.y += drop.speed * dt * 1.8;
-          drop.x += (0.07 + pointerX * 0.05) * dt;
+          drop.y += drop.speed * drop.depth * dt * 1.75;
+          drop.x += (0.012 + pointerX * 0.015) * drop.depth * dt;
           if (drop.y > 1.08) { drop.y = -0.08; drop.x = (drop.x + 0.37) % 1; }
           if (drop.x > 1.05) drop.x = -0.04;
         }
         const x = drop.x * width;
         const y = drop.y * height;
+        const length = drop.length * drop.depth;
+        ctx.lineWidth = drop.size;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = `rgba(205,229,232,${rainAlpha * drop.opacity})`;
         ctx.beginPath();
         ctx.moveTo(x, y);
-        ctx.lineTo(x - 4 - pointerX * 7, y + drop.length);
+        ctx.lineTo(x - 0.7 - pointerX * 1.4, y + length);
         ctx.stroke();
+
+        if (drop.y > 0.86 && drop.depth > 0.86 && i % 11 === 0) {
+          ctx.strokeStyle = `rgba(205,229,232,${rainAlpha * 0.10})`;
+          ctx.lineWidth = 0.55;
+          ctx.beginPath();
+          ctx.ellipse(x, Math.min(height - 2, y + length), 3.5, 1.15, 0, 0, Math.PI * 2);
+          ctx.stroke();
+        }
       });
       ctx.restore();
     }

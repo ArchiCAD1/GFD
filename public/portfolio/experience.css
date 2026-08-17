@@ -77,9 +77,10 @@
   z-index: 4;
   opacity: var(--wet-alpha, 0);
   background:
-    linear-gradient(120deg, transparent 30%, rgba(154, 205, 213, 0.18), transparent 68%),
-    repeating-linear-gradient(104deg, transparent 0 17px, rgba(207, 229, 231, 0.10) 18px, transparent 20px);
-  mix-blend-mode: screen;
+    radial-gradient(ellipse at 18% 82%, rgba(180, 218, 220, 0.12), transparent 24%),
+    radial-gradient(ellipse at 68% 88%, rgba(180, 218, 220, 0.10), transparent 21%),
+    linear-gradient(180deg, rgba(80, 119, 124, 0.08), rgba(11, 28, 29, 0.19));
+  mix-blend-mode: soft-light;
 }
 
 .atmosphere::after {
@@ -185,8 +186,41 @@
   backdrop-filter: blur(18px) saturate(1.35);
 }
 
-.intro > div { padding: clamp(26px, 4vw, 48px); }
+.intro {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: clamp(22px, 4vw, 60px) !important;
+}
+
+.intro > div {
+  min-height: clamp(360px, 39vw, 470px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(26px, 4vw, 48px);
+}
+
+.intro > div:last-child .intro-stat { margin-top: auto; }
+
+.hero-copy > .eyebrow {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  width: max-content;
+  max-width: none;
+  font-size: clamp(8px, 0.82vw, 10px);
+  letter-spacing: clamp(0.10em, 0.16vw, 0.18em);
+}
 .work-head { padding: clamp(22px, 3vw, 36px); }
+
+@media (max-width: 720px) {
+  .hero-copy > .eyebrow {
+    width: auto;
+    white-space: normal;
+    line-height: 1.55;
+  }
+
+  .intro { grid-template-columns: 1fr !important; }
+  .intro > div { min-height: auto; }
+}
 
 .project {
   border-radius: var(--radius-md) !important;
