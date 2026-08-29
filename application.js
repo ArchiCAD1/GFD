@@ -462,16 +462,9 @@ nextButton.addEventListener("click", async () => {
 });
 verifyButton.addEventListener("click", verifyEmail);
 downloadButton.addEventListener("click", generateEstimatePDF);
-journeySteps.forEach(button => button.addEventListener("click", async () => {
+journeySteps.forEach(button => button.addEventListener("click", () => {
   const target = Number(button.dataset.stepTarget);
   if (!Number.isFinite(target) || target === currentStep) return;
-  if (target < currentStep) {
-    setStep(target);
-    return;
-  }
-  for (let stepIndex = currentStep; stepIndex < target; stepIndex += 1) {
-    if (!validateStep(stepIndex)) return;
-  }
   setStep(target);
 }));
 documentInput.addEventListener("change", event => {
