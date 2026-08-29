@@ -169,28 +169,19 @@
   min-height: 46px;
 }
 
-.hero-index {
-  right: clamp(20px, 4vw, 64px) !important;
-  bottom: clamp(24px, 4vw, 48px) !important;
-  display: inline-grid !important;
-  justify-items: end;
-  gap: 3px !important;
-  padding: 10px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 999px;
-  background: rgba(7, 18, 11, 0.25);
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.16), 0 14px 32px rgba(0, 0, 0, 0.14);
-  -webkit-backdrop-filter: blur(14px) saturate(1.25);
-  backdrop-filter: blur(14px) saturate(1.25);
+.hero {
+  min-height: clamp(720px, 88svh, 900px) !important;
+  padding-top: clamp(128px, 15vh, 164px) !important;
+  padding-bottom: 118px !important;
 }
 
-.hero-index b {
-  font-size: clamp(24px, 3vw, 34px) !important;
-  font-weight: 400 !important;
-  letter-spacing: -0.04em !important;
+.hero-copy {
+  align-self: center !important;
+  max-width: 840px !important;
+  transform: translateY(-2vh);
 }
 
-.hero-index span { opacity: 0.86; }
+.hero-copy p { width: min(570px, 100%) !important; }
 
 .intro,
 .work,
@@ -212,10 +203,12 @@
 .intro {
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: clamp(22px, 4vw, 60px) !important;
+  min-height: auto !important;
+  padding: clamp(72px, 8vw, 104px) clamp(20px, 8vw, 112px) !important;
 }
 
 .intro > div {
-  min-height: clamp(360px, 39vw, 470px);
+  min-height: clamp(320px, 32vw, 410px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -256,6 +249,19 @@
   letter-spacing: clamp(0.10em, 0.16vw, 0.18em);
 }
 .work-head { padding: clamp(22px, 3vw, 36px); }
+
+.services {
+  min-height: auto !important;
+  padding: clamp(76px, 8vw, 108px) clamp(20px, 8vw, 112px) !important;
+}
+
+.services-heading .section-title {
+  max-width: none;
+  font-size: clamp(2.9rem, 5.3vw, 5.3rem) !important;
+  white-space: nowrap;
+}
+
+.services .service-list { margin-top: clamp(34px, 4vw, 50px) !important; }
 
 @media (max-width: 720px) {
   .hero-copy > .eyebrow {
@@ -354,9 +360,15 @@
 
 .contact {
   background: rgba(5, 14, 9, 0.06) !important;
+  min-height: auto !important;
+  padding-block: clamp(84px, 9vw, 118px) !important;
 }
 
 .contact-glass {
+  min-height: clamp(520px, 64svh, 620px) !important;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 0.38fr) !important;
+  gap: clamp(30px, 4vw, 64px) !important;
+  padding: clamp(38px, 5vw, 72px) !important;
   border-radius: var(--radius-lg) !important;
   border-color: rgba(255, 255, 255, 0.64) !important;
   background:
@@ -403,23 +415,49 @@
   text-shadow: none;
 }
 
-.contact-identity p {
-  display: inline-block;
-  max-width: 100%;
-  padding: 13px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: 999px;
-  background: rgba(8, 28, 17, 0.32);
-  color: #ecf5ea !important;
-  font-size: clamp(11px, 1.1vw, 14px);
-  font-weight: 700;
-  line-height: 1.65;
-  text-shadow: 0 1px rgba(0, 0, 0, 0.58), 0 2px 14px rgba(0, 0, 0, 0.24);
-}
-
 .contact-identity {
   align-self: center;
-  max-width: 240px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.contact-disciplines {
+  display: grid;
+  gap: 9px;
+  width: 100%;
+}
+
+.contact-disciplines span {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  min-height: 48px;
+  padding: 11px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(8, 28, 17, 0.35), rgba(8, 28, 17, 0.18));
+  color: #f0f5ec;
+  font-family: var(--mono);
+  font-size: clamp(10px, 0.95vw, 12px);
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  backdrop-filter: blur(14px) saturate(1.25);
+}
+
+.contact-disciplines b {
+  color: #d7b364;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.contact-disciplines .contact-location {
+  margin-top: 3px;
+  border-color: rgba(215, 179, 100, 0.48);
+  background: linear-gradient(145deg, rgba(53, 45, 24, 0.34), rgba(8, 28, 17, 0.20));
 }
 
 .contact-logo-card {
@@ -491,6 +529,10 @@
   .approach-art {
     min-height: 520px;
   }
+
+  .services-heading .section-title {
+    white-space: normal;
+  }
 }
 
 @media (max-width: 720px) {
@@ -542,10 +584,15 @@
     justify-self: center;
     grid-template-columns: 1fr !important;
     justify-items: center !important;
+    max-width: none;
   }
 
-  .contact-identity p {
-    text-align: center;
+  .contact-disciplines {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact-disciplines .contact-location {
+    margin-top: 0;
   }
 }
 
