@@ -14,6 +14,7 @@ import { createPreliminaryEstimatePDF } from "./preliminary-pdf.js";
 const config = window.GFD_CONFIG;
 const form = document.querySelector("#project-application");
 const steps = [...document.querySelectorAll(".wizard-step")];
+const journeySteps = [...document.querySelectorAll(".journey-step")];
 const previousButton = document.querySelector("#previous-step");
 const nextButton = document.querySelector("#next-step");
 const progressBar = document.querySelector("#progress-bar");
@@ -81,6 +82,15 @@ function showError(message = "") {
 function setStep(index) {
   currentStep = Math.max(0, Math.min(steps.length - 1, index));
   steps.forEach((step, stepIndex) => step.classList.toggle("is-active", stepIndex === currentStep));
+  journeySteps.forEach((button, buttonIndex) => {
+    const target = Number(button.dataset.stepTarget);
+    const isCurrent = target === currentStep;
+    button.classList.toggle("is-current", isCurrent);
+    button.classList.toggle("is-complete", target < currentStep);
+    if (isCurrent) button.setAttribute("aria-current", "step");
+    else button.removeAttribute("aria-current");
+    button.disabled = false;
+  });
   previousButton.disabled = currentStep === 0;
   previousButton.hidden = currentStep === 0;
   nextButton.textContent = currentStep === steps.length - 1 ? "Submit application" : "Continue";
@@ -256,7 +266,7 @@ function validateFiles(files) {
 }
 
 function renderFiles() {
-  fileList.innerHTML = selectedFiles.map(file => `<div class="file-item"><span>${escapeHTML(file.name)}</span><span>${(file.size / 1024 / 1024).toFixed(1)} MB</span></div>`).join("");
+  fileList.innerHTML = selectedFiles.map((file, index) => `<div class="file-item"><span class="file-name">${escapeHTML(file.name)}</span><span class="file-size">${(file.size / 1024 / 1024).toFixed(1)} MB</span><button class="file-remove" type="button" data-remove-index="${index}" aria-label="Remove ${escapeHTML(file.name)}">Remove</button></div>`).join("");
 }
 
 function escapeHTML(text) {
@@ -452,9 +462,32 @@ nextButton.addEventListener("click", async () => {
 });
 verifyButton.addEventListener("click", verifyEmail);
 downloadButton.addEventListener("click", generateEstimatePDF);
+journeySteps.forEach(button => button.addEventListener("click", async () => {
+  const target = Number(button.dataset.stepTarget);
+  if (!Number.isFinite(target) || target === currentStep) return;
+  if (target < currentStep) {
+    setStep(target);
+    return;
+  }
+  for (let stepIndex = currentStep; stepIndex < target; stepIndex += 1) {
+    if (!validateStep(stepIndex)) return;
+  }
+  setStep(target);
+}));
 documentInput.addEventListener("change", event => {
-  try { selectedFiles = [...event.target.files]; validateFiles(selectedFiles); renderFiles(); showError(); }
-  catch (error) { selectedFiles = []; documentInput.value = ""; renderFiles(); showError(error.message); }
+  const incoming = [...event.target.files];
+  const fileKey = file => `${file.name}:${file.size}:${file.lastModified}`;
+  const combined = [...selectedFiles, ...incoming.filter(file => !selectedFiles.some(existing => fileKey(existing) === fileKey(file)))];
+  try { validateFiles(combined); selectedFiles = combined; renderFiles(); showError(); }
+  catch (error) { showError(error.message); }
+  finally { documentInput.value = ""; }
+});
+fileList.addEventListener("click", event => {
+  const removeButton = event.target.closest("[data-remove-index]");
+  if (!removeButton) return;
+  selectedFiles.splice(Number(removeButton.dataset.removeIndex), 1);
+  renderFiles();
+  showError();
 });
 form.addEventListener("input", event => {
   if (event.target.name === "classification") toggleRoomProgramme();
