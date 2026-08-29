@@ -434,9 +434,9 @@ async function loadPricing() {
     const result = await response.json();
     if (!response.ok || !result?.version) throw new Error("Pricing is unavailable.");
     pricing = result;
-    document.querySelector("#configuration-badge").textContent = pricing.published ? `Published rates · ${pricing.version}` : "Pricing not published";
+    document.querySelector("#configuration-badge").textContent = pricing.published ? `Published pricing · ${pricing.version}` : "Estimate preview · Pricing is not yet published";
   } catch {
-    document.querySelector("#configuration-badge").textContent = "Configuration preview · connection unavailable";
+    document.querySelector("#configuration-badge").textContent = "Estimate preview · Online pricing is currently unavailable";
   }
   updateEstimate();
 }
