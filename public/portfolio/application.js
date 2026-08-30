@@ -509,15 +509,25 @@ function enhanceCountInputs() {
     increment.setAttribute("aria-label", `Increase ${humanize(input.name)}`);
     shell.prepend(decrement);
     shell.append(increment);
+    const updateButtonState = () => {
+      const value = Number(input.value || 0);
+      const min = Number.isFinite(Number(input.min)) ? Number(input.min) : 0;
+      const max = Number.isFinite(Number(input.max)) ? Number(input.max) : Number.MAX_SAFE_INTEGER;
+      decrement.disabled = value <= min;
+      increment.disabled = value >= max;
+    };
     const adjust = direction => {
       const step = Number(input.step || 1);
       const min = Number.isFinite(Number(input.min)) ? Number(input.min) : 0;
       const max = Number.isFinite(Number(input.max)) ? Number(input.max) : Number.MAX_SAFE_INTEGER;
       input.value = String(Math.max(min, Math.min(max, Number(input.value || 0) + direction * step)));
       input.dispatchEvent(new Event("input", { bubbles: true }));
+      updateButtonState();
     };
     decrement.addEventListener("click", () => adjust(-1));
     increment.addEventListener("click", () => adjust(1));
+    input.addEventListener("input", updateButtonState);
+    updateButtonState();
   });
 }
 

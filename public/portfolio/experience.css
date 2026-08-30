@@ -159,9 +159,18 @@
 }
 
 .nav-cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   border-color: rgba(255, 255, 255, 0.34) !important;
   background: rgba(255, 255, 255, 0.08);
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.18);
+}
+
+footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .button {
