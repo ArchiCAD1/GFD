@@ -195,6 +195,49 @@
   margin-top: clamp(20px, 2.5vw, 30px) !important;
 }
 
+.hero-capabilities {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  width: min(930px, 100%);
+  margin-top: clamp(24px, 3.2vw, 36px);
+}
+
+.hero-capabilities article {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  gap: 7px 10px;
+  min-height: 112px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 17px;
+  background: linear-gradient(145deg, rgba(7, 18, 11, 0.24), rgba(7, 18, 11, 0.10));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.10);
+  -webkit-backdrop-filter: blur(9px) saturate(1.15);
+  backdrop-filter: blur(9px) saturate(1.15);
+}
+
+.hero-capabilities b {
+  color: #d7b364;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.hero-capabilities strong {
+  color: #f4f1e8;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.hero-capabilities span {
+  grid-column: 1 / -1;
+  color: #ced7cc;
+  font-size: 0.76rem;
+  line-height: 1.42;
+}
+
 .intro,
 .work,
 .services,
@@ -382,23 +425,29 @@
   gap: clamp(30px, 4vw, 64px) !important;
   padding: clamp(38px, 5vw, 72px) !important;
   border-radius: var(--radius-lg) !important;
-  border-color: rgba(255, 255, 255, 0.64) !important;
+  border-color: rgba(255, 255, 255, 0.44) !important;
   background:
-    radial-gradient(circle at 78% 10%, rgba(255, 255, 255, 0.20), transparent 29%),
-    linear-gradient(145deg, rgba(235, 244, 236, 0.17), rgba(190, 214, 196, 0.08) 56%, rgba(255, 255, 255, 0.05)) !important;
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.82), inset -20px -20px 48px rgba(23, 54, 38, 0.07), 0 28px 80px rgba(0, 0, 0, 0.22) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(1.38) !important;
-  backdrop-filter: blur(24px) saturate(1.38) !important;
+    radial-gradient(circle at 78% 10%, rgba(255, 255, 255, 0.08), transparent 29%),
+    linear-gradient(145deg, rgba(213, 229, 216, 0.075), rgba(142, 172, 151, 0.025) 56%, rgba(255, 255, 255, 0.02)) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.46), inset -20px -20px 48px rgba(23, 54, 38, 0.035), 0 28px 80px rgba(0, 0, 0, 0.20) !important;
+  -webkit-backdrop-filter: blur(9px) saturate(1.14) !important;
+  backdrop-filter: blur(9px) saturate(1.14) !important;
 }
+
+.contact-glass::before {
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.13), transparent 24%, transparent 72%, rgba(255, 255, 255, 0.05)) !important;
+}
+
+.contact-glass::after { opacity: 0.16; }
 
 .contact-copy {
   padding: clamp(24px, 3.8vw, 48px);
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: var(--radius-md);
-  background: linear-gradient(145deg, rgba(8, 24, 15, 0.38), rgba(10, 31, 20, 0.18));
+  background: linear-gradient(145deg, rgba(8, 24, 15, 0.22), rgba(10, 31, 20, 0.08));
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.18), 0 24px 54px rgba(0, 0, 0, 0.18);
-  -webkit-backdrop-filter: blur(20px) saturate(1.35);
-  backdrop-filter: blur(20px) saturate(1.35);
+  -webkit-backdrop-filter: blur(10px) saturate(1.18);
+  backdrop-filter: blur(10px) saturate(1.18);
 }
 
 .contact .eyebrow {
@@ -447,7 +496,7 @@
   padding: 11px 16px;
   border: 1px solid rgba(255, 255, 255, 0.32);
   border-radius: 16px;
-  background: linear-gradient(145deg, rgba(8, 28, 17, 0.35), rgba(8, 28, 17, 0.18));
+  background: linear-gradient(145deg, rgba(8, 28, 17, 0.21), rgba(8, 28, 17, 0.075));
   color: #f0f5ec;
   font-family: var(--mono);
   font-size: clamp(10px, 0.95vw, 12px);
@@ -545,6 +594,12 @@
   .services-heading .section-title {
     white-space: normal;
   }
+
+  .hero-capabilities {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-capabilities article { min-height: 94px; }
 }
 
 @media (max-width: 720px) {
@@ -584,12 +639,12 @@
   }
 
   .contact-glass {
-    background: linear-gradient(145deg, rgba(240, 247, 240, 0.13), rgba(196, 218, 201, 0.05)) !important;
+    background: linear-gradient(145deg, rgba(240, 247, 240, 0.065), rgba(196, 218, 201, 0.018)) !important;
     border-radius: 32px !important;
   }
 
   .contact-copy {
-    background: linear-gradient(145deg, rgba(8, 24, 15, 0.42), rgba(10, 31, 20, 0.20));
+    background: linear-gradient(145deg, rgba(8, 24, 15, 0.23), rgba(10, 31, 20, 0.08));
   }
 
   .contact-identity {
