@@ -170,18 +170,30 @@
 }
 
 .hero {
-  min-height: clamp(720px, 88svh, 900px) !important;
-  padding-top: clamp(128px, 15vh, 164px) !important;
-  padding-bottom: 118px !important;
+  min-height: clamp(650px, 78svh, 780px) !important;
+  padding-top: clamp(112px, 12vh, 132px) !important;
+  padding-bottom: 106px !important;
 }
 
 .hero-copy {
-  align-self: center !important;
-  max-width: 840px !important;
-  transform: translateY(-2vh);
+  align-self: flex-start !important;
+  width: 100%;
+  max-width: none !important;
+  margin-top: clamp(42px, 6vh, 64px);
+  transform: none;
 }
 
-.hero-copy p { width: min(570px, 100%) !important; }
+.hero h1 {
+  max-width: none !important;
+  font-size: clamp(2.35rem, 6vw, 6.25rem) !important;
+  line-height: 0.96 !important;
+  white-space: nowrap;
+}
+
+.hero-copy p {
+  width: min(650px, 100%) !important;
+  margin-top: clamp(20px, 2.5vw, 30px) !important;
+}
 
 .intro,
 .work,
